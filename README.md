@@ -1,5 +1,5 @@
 # Nukebot
-![nuke](assets/images/NukebotLogo.png)
+![nuke](assets/images/NukebotLogo.png)\
 A discord bot for nuking discord servers you have permissions on. Stupid-proof.
 
 ## Features
@@ -16,7 +16,7 @@ Download as zip with this [direct link](https://codeload.github.com/Dr-Insanity/
 ### Instructions for easy way
 >**1.)** Unzip the zip file.\
 **2.)** You must have [Python 3](https://www.python.org/downloads/). At the installer, both of the below options MUST BE ticked!!!\
-![options-that-must-be-ticked](assets/images/example#1.png)\
+![options-that-must-be-ticked](assets/images/example1.png)\
 **3.)** Just double click "main.py" :D.
 - ❗ This will open up a window.\
 Don't close it.\
