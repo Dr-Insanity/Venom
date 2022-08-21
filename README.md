@@ -34,9 +34,6 @@ git clone --branch Release https://github.com/Dr-Insanity/Nukebot.git
 </details>
 
 ## Usage
-
-The prefix is **`n!`**\
-\
-Nukebot also has [slash commands](https://discord.com/blog/slash-commands-are-here), that will only be displayed in your own _"home"_ discord server, basically serving as your command center.
+Nukebot has [slash commands](https://discord.com/blog/slash-commands-are-here), that will only be displayed in your own _"home"_ discord server, basically serving as your command center.
 
 I designed it this way. For now, this is how it works because I don't see a reason to do it in some other way.
