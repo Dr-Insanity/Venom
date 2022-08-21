@@ -275,7 +275,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     value = i.data._components[0].children[0].value
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
         return
 
 @bot.event
