@@ -86,7 +86,7 @@ if token is None:
     f.close()
     load_dotenv(".env")
 
-bot = commands.InteractionBot()
+bot = commands.Bot()
 
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
