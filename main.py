@@ -288,7 +288,10 @@ async def on_ready():
             .set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server")
             .set_thumbnail(url=bot.user.display_avatar), view=make_home_guild_select_view()
         )
-    print(platform.platform())
+    doPlatformRespectiveCMD = {
+        'a':'b'
+    }
+    print(platform.system())
     run(["ls", "-l"])
 
 @bot.event
