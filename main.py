@@ -134,8 +134,9 @@ class Config:
 __target_serverid = get_var('target_server')
 __home_serverid = [get_var('home_server')]
 print(__home_serverid)
-if __home_serverid is None:
+if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
+print
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
