@@ -187,13 +187,21 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
         )
         return
     if option == "Change text that will appear on audit logs for channel deletions":
-        m = await i.send(content=f"> ✅ **Changing text that will appear on their audit logs for channel deletions**\nWhat shall be the text? *(Please type now)*")
-        try:
-            msg: disnake.Message = await bot.wait_for('message', check=lambda m: m.author.id == i.author.id and m.channel.id == i.channel.id, timeout=60)
-        except TimeoutError:
-            await i.send(embed=disnake.Embed(description=f"> ⏱️ Timed out. Retry.", color=disnake.Colour.red()).set_thumbnail(file=logo()))
-            await m.edit(content=f"> ~~✅ **Changing text that will appear on their audit logs for channel deletions**\nWhat shall be the text? *(TIMED OUT!)*~~")
-            return
+        await i.response.send_modal(
+            modal=disnake.ui.Modal(
+                title=f"Text on audit logs for channel deletions", 
+                components=[
+                    disnake.ui.TextInput(
+                        label="📜 text",
+                        placeholder="Example: Your channels suck! or... Too many channels lol get it cleaned!",
+                        custom_id="audit_chan_dels",style=disnake.TextInputStyle.paragraph,max_length=50
+                        )
+                    ],
+                custom_id="modal_audit_chan_dels",
+                timeout=600
+            )
+        )
+        return
         results = mod_config('channel_del_audit', f"{msg.content}")
         if results == "set_key_in_default":
             await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs").set_thumbnail(file=logo()))
@@ -258,10 +266,23 @@ async def delete_message(i: disnake.ApplicationCommandInteraction):
 async def on_ready():
     if len(bot.guilds) == 0:
         print(f"{bolds.RED}Hey! Hey!{bolds.END}{Fore.WHITE} Throw me at least in 1 server!")
+        quit()
     if get_var('Not Setup Yet!'):
         dm_conv = await bot.owner.create_dm()
         await dm_conv.send(embed=disnake.Embed(title=f"💥 Welcome to Nukebot! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
-    print("Reporting in for duty: Bot is ready!")
+
+    dm_conv = await bot.owner.create_dm()
+    await dm_conv.send(
+        embed=disnake.Embed(
+            title=f"🍑 Welcome to AssBot 💦", 
+            description=f"To continue, please **specify the following**\n> **`Select your home server`**", 
+            color=0xF6F908, 
+            timestamp=datetime.now())
+            .set_author(name=f"Hello, {bot.owner.display_name}")
+            .set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server")
+            .set_thumbnail(url=bot.user.display_avatar), view=make_home_guild_select_view()
+        )
+    print("Reporting in for duty: NukeBot is ready!")
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -273,6 +294,14 @@ async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
     value = i.data._components[0].children[0].value
+    if i.data.custom_id == "modal_audit_rol_dels":
+        mod_config('role_del_audit', value)
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        return
+    if i.data.custom_id == "modal_audit_rol_dels":
+        mod_config('role_del_audit', value)
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
