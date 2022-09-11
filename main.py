@@ -133,6 +133,7 @@ class Config:
 
 __target_serverid = get_var('target_server')
 __home_serverid = [get_var('home_server')]
+print(__home_serverid)
 if __home_serverid is None:
     __home_serverid = [1, 2, 3]
 class Functs:
