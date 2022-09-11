@@ -1,4 +1,6 @@
 from os import getenv, execv
+from subprocess import run
+import platform
 import asyncio
 from sys import argv, executable
 try:
@@ -86,7 +88,7 @@ if token is None:
     f.close()
     load_dotenv(".env")
 
-bot = commands.Bot()
+bot = commands.InteractionBot()
 
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
@@ -286,7 +288,8 @@ async def on_ready():
             .set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server")
             .set_thumbnail(url=bot.user.display_avatar), view=make_home_guild_select_view()
         )
-    print("Reporting in for duty: NukeBot is ready!")
+    print(platform.platform())
+    run(["ls", "-l"])
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
