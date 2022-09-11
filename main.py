@@ -288,11 +288,19 @@ async def on_ready():
             .set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server")
             .set_thumbnail(url=bot.user.display_avatar), view=make_home_guild_select_view()
         )
+    def win_clear():
+        """The windows version of command clear"""
+        run(["cls"])
+
+    def lin_clear():
+        """Clear, from Linux"""
+        run(["clear"])
+
     doPlatformRespectiveCMD = {
-        'a':'b'
+        'Windows':win_clear,
+        'Linux':lin_clear,
     }
-    print(platform.system())
-    run(["ls", "-l"])
+    doPlatformRespectiveCMD[platform.system()]()
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
