@@ -290,7 +290,7 @@ async def on_ready():
         )
     def win_clear():
         """The windows version of command clear"""
-        run(["cmd", "cls"])
+        run("cls", shell=True)
 
     def lin_clear():
         """Clear, from Linux"""
