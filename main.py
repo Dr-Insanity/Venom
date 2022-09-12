@@ -336,15 +336,15 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         QandA = {}
         for key, val in i.text_values:
             if key == "Q1":
-                
+                QandA[key] = val
             if key == "Q2":
-                ""
+                QandA[key] = val
             if key == "Q3":
-                ""
+                QandA[key] = val
             if key == "Q4":
-                ""
+                QandA[key] = val
             if key == "Q5":
-                ""
+                QandA[key] = val
 @bot.event
 async def on_button_click(i: disnake.MessageInteraction):
     if i.data.custom_id == "answer_questions_page1":
