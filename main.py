@@ -239,13 +239,16 @@ async def permissions_for(i: disnake.ApplicationCommandInteraction):
 @commands.is_owner()
 async def start(i: disnake.ApplicationCommandInteraction):
     guild_id = get_var('target_server')
+    homeserver = get_var('home_server')
     if guild_id is None:
         await i.send(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     g = bot.get_guild(int(guild_id))
-    if i.guild.id == g.id:
-        await i.send(embed=disnake.Embed(description=f"> Are you insane? Do it in your own server remotely!", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+    if homeserver == guild_id:
+        await i.send(embed=disnake.Embed(description=f"> This is suicide! You specified your home server as your target server!\n\n**Change your target_server, please.**", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
+    if i.guild.id == guild_id:
+        await i.send(embed=disnake.Embed(description=f"> Are you insane? Do it in your own server remotely!\n\n**You wouldn't want to be in the nuclear fallout! :", color=disnake.Colour.red()).set_thumbnail(file=logo()))
 
     return
 
@@ -281,19 +284,23 @@ async def on_ready():
     await dm_conv.send(
         embed=disnake.Embed(
             title=f"🍑 Welcome to AssBot 💦", 
-            description=f"To continue, please **specify the following**\n> **`Select your home server`**", 
+            description=f"To continue, please\n> **`Answer some questions`**", 
             color=0xF6F908, 
             timestamp=datetime.now())
             .set_author(name=f"Hello, {bot.owner.display_name}")
-            .set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server")
-            .set_thumbnail(url=bot.user.display_avatar), view=make_home_guild_select_view()
+            .set_footer(text=f"Made with ❤️")
+            .set_thumbnail(url=bot.user.display_avatar), components=disnake.ui.Modal("questions page 1", components=[
+                disnake.ui.TextInput(label=f"Q1", placeholder='We', required=False, style=disnake.TextInputStyle.short),
+                disnake.ui.TextInput(label=f"Q2", placeholder='Love', required=False, style=disnake.TextInputStyle.short),
+                disnake.ui.TextInput(label=f"Q3", placeholder='Huge', required=False, style=disnake.TextInputStyle.short),
+                disnake.ui.TextInput(label=f"Q4", placeholder='Sweaty', required=False, style=disnake.TextInputStyle.short),
+                disnake.ui.TextInput(label=f"Q5", placeholder='Asses', required=False, style=disnake.TextInputStyle.short),
+                ])
         )
     def win_clear():
-        """The windows version of command clear"""
         run("cls", shell=True)
 
     def lin_clear():
-        """Clear, from Linux"""
         run(["clear"])
 
     doPlatformRespectiveCMD = {
@@ -301,6 +308,13 @@ async def on_ready():
         'Linux':lin_clear,
     }
     doPlatformRespectiveCMD[platform.system()]()
+    print(f"""{bolds.RED}
+ _   _       _        ____        _   
+| \ | |     | |      |  _ \      | |  
+|  \| |_   _| | _____| |_) | ___ | |_ 
+| . ` | | | | |/ / _ \  _ < / _ \| __|
+| |\  | |_| |   <  __/ |_) | (_) | |_
+|_| \_|\__,_|_|\_\___|____/ \___/ \__|""" + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
