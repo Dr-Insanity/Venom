@@ -332,7 +332,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
         return
-    if i.data.custom_id == "answer_questions_page1":
+    if i.data.custom_id == "questions_page1":
         plchldr1 = i.data._components[0].children[0].placeholder
         plchldr2 = i.data._components[0].children[1].placeholder
         plchldr3 = i.data._components[0].children[2].placeholder
@@ -350,6 +350,24 @@ async def on_modal_submit(i: disnake.ModalInteraction):
                 QandA[plchldr4] = val
             if key == "Q5":
                 QandA[plchldr5] = val
+
+        await i.response.send_modal(
+            disnake.ui.Modal(
+                title="questions page 2", 
+                components=[
+                    disnake.ui.TextInput(label=f"Question 1", placeholder="What is your full name?", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
+                    disnake.ui.TextInput(label=f"Question 2", placeholder="What is your age?", required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
+                    disnake.ui.TextInput(label=f"Question 3", placeholder="What is your experiences in other servers as <role> ?", required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
+                    disnake.ui.TextInput(label=f"Question 4", placeholder="What makes you different than the average Joe?", required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
+                    disnake.ui.TextInput(label=f"Question 5", placeholder="There's a chat beef going on. What do you do?", required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
+                ], 
+                custom_id='questions_page2'
+            )
+        )
+
+
+
+
 @bot.event
 async def on_button_click(i: disnake.MessageInteraction):
     if i.data.custom_id == "answer_questions_page1":
