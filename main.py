@@ -352,11 +352,11 @@ async def on_button_click(i: disnake.MessageInteraction):
             disnake.ui.Modal(
                 title="questions page 1", 
                 components=[
-                    disnake.ui.TextInput(label=f"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", placeholder='We', required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
-                    disnake.ui.TextInput(label=f"Q2", placeholder='Love', required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
-                    disnake.ui.TextInput(label=f"Q3", placeholder='Huge', required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
-                    disnake.ui.TextInput(label=f"Q4", placeholder='Sweaty', required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
-                    disnake.ui.TextInput(label=f"Q5", placeholder='Asses', required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
+                    disnake.ui.TextInput(label=f"What is your full name?", placeholder="The name's bond, James Bond", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
+                    disnake.ui.TextInput(label=f"What is your age?", placeholder='I am 51 years old', required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
+                    disnake.ui.TextInput(label=f"What are your experiences in discord servers as <role> ?", placeholder='None. I do killing a lot', required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
+                    disnake.ui.TextInput(label=f"What makes you different than the average Joe?", placeholder='I can ban em when I need to lmao', required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
+                    disnake.ui.TextInput(label=f"There's a chat beef going on. What do you do?", placeholder='Tell em both to stop or die xD', required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
                 ], 
                 custom_id='questions_page1'
             )
