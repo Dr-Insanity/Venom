@@ -90,6 +90,26 @@ if token is None:
 
 bot = commands.InteractionBot()
 
+class mk_questions(disnake.ui.Modal):
+    def __init__(self, bot: commands.Bot, amount: int):
+        self.amount = amount
+        self.bot = bot
+        comps: list[disnake.Component] = []
+        while len(comps) < amount and len(comps) < 5:
+            comp = disnake.ui.TextInput(
+                label=f'QUESTION {amount}', custom_id=f'Q{amount}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+            )
+            comps.append()
+            amount -= 1
+        super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
+
+    async def on_error(self, error: Exception, i: disnake.ModalInteraction) -> None:
+        await i.response.send_message(embed=disnake.Embed(title=f"Something went wrong", description=f"```{str(error.with_traceback())}```", color=disnake.Colour.red()))
+
+    async def callback(self, i: disnake.ModalInteraction):
+        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`", color=disnake.Colour.green()))
+
+
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
         Found_Guilds_Selects_Options = []
@@ -333,7 +353,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), components=disnake.ui.Button(style=disnake.ButtonStyle.green, label=f"Start writing the questions", custom_id='answer_questions_page1'))
             return
         except ValueError:
             await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
@@ -352,7 +372,6 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         return
     if i.data.custom_id == "questions_page1":
         plchldr1 = i.data._components[0].children[0].placeholder
-        print(plchldr1)
         plchldr2 = i.data._components[0].children[0].placeholder
         plchldr3 = i.data._components[0].children[0].placeholder
         plchldr4 = i.data._components[0].children[0].placeholder
@@ -370,19 +389,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
             if key == "Q5":
                 QandA[plchldr5] = val
 
-        await i.response.send_modal(
-            disnake.ui.Modal(
-                title="questions page 2", 
-                components=[
-                    disnake.ui.TextInput(label=f"Question 1", placeholder="What is your full name?", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
-                    disnake.ui.TextInput(label=f"Question 2", placeholder="What is your age?", required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
-                    disnake.ui.TextInput(label=f"Question 3", placeholder="What is your experiences in other servers as <role> ?", required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
-                    disnake.ui.TextInput(label=f"Question 4", placeholder="What makes you different than the average Joe?", required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
-                    disnake.ui.TextInput(label=f"Question 5", placeholder="There's a chat beef going on. What do you do?", required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
-                ], 
-                custom_id='questions_page2'
-            )
-        )
+        await i.response.send_modal(mk_questions())
 
 
 
