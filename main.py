@@ -345,13 +345,15 @@ async def on_ready():
         'Linux':lin_clear,
     }
     doPlatformRespectiveCMD[platform.system()]()
-    print(f"""{bolds.RED}
- _   _       _        ____        _   
-| \ | |     | |      |  _ \      | |  
-|  \| |_   _| | _____| |_) | ___ | |_ 
-| . ` | | | | |/ / _ \  _ < / _ \| __|
-| |\  | |_| |   <  __/ |_) | (_) | |_
-|_| \_|\__,_|_|\_\___|____/ \___/ \__|""" + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
+    print(f"""{bolds.YELLOW}
+☢ ☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢
+☢{bolds.RED} _   _       _        ____        _   {bolds.YELLOW}☢
+☢{bolds.RED}| \ | |     | |      |  _ \      | |  {bolds.YELLOW}☢
+☢{bolds.RED}|  \| |_   _| | _____| |_) | ___ | |_ {bolds.YELLOW}☢
+☢{bolds.RED}| . ` | | | | |/ / _ \  _ < / _ \| __|{bolds.YELLOW}☢
+☢{bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
+☢{bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
+☢ ☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢""" + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
