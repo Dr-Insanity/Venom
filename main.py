@@ -333,18 +333,23 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "answer_questions_page1":
+        plchldr1 = i.data._components[0].children[0].placeholder
+        plchldr2 = i.data._components[0].children[1].placeholder
+        plchldr3 = i.data._components[0].children[2].placeholder
+        plchldr4 = i.data._components[0].children[3].placeholder
+        plchldr5 = i.data._components[0].children[4].placeholder
         QandA = {}
         for key, val in i.text_values:
             if key == "Q1":
-                QandA[key] = val
+                QandA[plchldr1] = val
             if key == "Q2":
-                QandA[key] = val
+                QandA[plchldr2] = val
             if key == "Q3":
-                QandA[key] = val
+                QandA[plchldr3] = val
             if key == "Q4":
-                QandA[key] = val
+                QandA[plchldr4] = val
             if key == "Q5":
-                QandA[key] = val
+                QandA[plchldr5] = val
 @bot.event
 async def on_button_click(i: disnake.MessageInteraction):
     if i.data.custom_id == "answer_questions_page1":
@@ -352,11 +357,11 @@ async def on_button_click(i: disnake.MessageInteraction):
             disnake.ui.Modal(
                 title="questions page 1", 
                 components=[
-                    disnake.ui.TextInput(label=f"What is your full name?", placeholder="The name's bond, James Bond", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
-                    disnake.ui.TextInput(label=f"What is your age?", placeholder='I am 51 years old', required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
-                    disnake.ui.TextInput(label=f"What are your experiences in discord servers as <role> ?", placeholder='None. I do killing a lot', required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
-                    disnake.ui.TextInput(label=f"What makes you different than the average Joe?", placeholder='I can ban em when I need to lmao', required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
-                    disnake.ui.TextInput(label=f"There's a chat beef going on. What do you do?", placeholder='Tell em both to stop or die xD', required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
+                    disnake.ui.TextInput(label=f"Question 1", placeholder="What is your full name?", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
+                    disnake.ui.TextInput(label=f"Question 2", placeholder="What is your age?", required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
+                    disnake.ui.TextInput(label=f"Question 3", placeholder="What is your experiences in other servers as <role> ?", required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
+                    disnake.ui.TextInput(label=f"Question 4", placeholder="What makes you different than the average Joe?", required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
+                    disnake.ui.TextInput(label=f"Question 5", placeholder="There's a chat beef going on. What do you do?", required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
                 ], 
                 custom_id='questions_page1'
             )
