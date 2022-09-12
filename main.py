@@ -334,10 +334,11 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         return
     if i.data.custom_id == "questions_page1":
         plchldr1 = i.data._components[0].children[0].placeholder
-        plchldr2 = i.data._components[0].children[1].placeholder
-        plchldr3 = i.data._components[0].children[2].placeholder
-        plchldr4 = i.data._components[0].children[3].placeholder
-        plchldr5 = i.data._components[0].children[4].placeholder
+        print(plchldr1)
+        plchldr2 = i.data._components[0].children[0].placeholder
+        plchldr3 = i.data._components[0].children[0].placeholder
+        plchldr4 = i.data._components[0].children[0].placeholder
+        plchldr5 = i.data._components[0].children[0].placeholder
         QandA = {}
         for key, val in i.text_values:
             if key == "Q1":
