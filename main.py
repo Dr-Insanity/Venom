@@ -170,6 +170,7 @@ optionss = commands.option_enum(
     "Change text that will appear on audit logs for member punishments (ban, kick, etc)",
     "Change target server",
     "Change home server",
+    "Setup questions",
     ]
     )
 @bot.slash_command(guild_ids=__home_serverid)
@@ -230,7 +231,16 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
     if option == "Change home server":
         await i.send(embed=disnake.Embed(title=f"Please specify your home/own server", color=0xF6F908, timestamp=datetime.now()).set_thumbnail(file=logo()), view=make_home_guild_select_view())
         return
-
+    if option == "Setup questions":
+        await i.response.send_modal(
+            disnake.ui.Modal(
+                title="Questions • Setup", 
+                components=[
+                    disnake.ui.TextInput(label=f"Question", placeholder="How many questions would you like to create? Max 5 questions per popup/page", required=False, style=disnake.TextInputStyle.short, custom_id='amount_of_questions'),
+                ], 
+                custom_id='setup_questions'
+            )
+        )
 @bot.slash_command(guild_ids=__home_serverid)
 async def permissions_for(i: disnake.ApplicationCommandInteraction):
     """"""
@@ -320,6 +330,14 @@ async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
     value = i.data._components[0].children[0].value
+    if i.data.custom_id == "setup_questions":
+        try:
+            int(value)
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked").set_thumbnail(file=logo()))
+            return
+        except ValueError:
+            await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)").set_thumbnail(file=logo()))
+            return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
