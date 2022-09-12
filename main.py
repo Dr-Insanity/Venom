@@ -90,6 +90,19 @@ if token is None:
 
 bot = commands.InteractionBot()
 
+class mk_q(disnake.ui.Button):
+    def __init__(self, bot: commands.InteractionBot, amount: int):
+        self.bot = bot
+        self.amount = amount
+        super().__init__(style=disnake.ButtonStyle.green, label=f"Start writing the questions", custom_id=f"answer_questions_page1")
+    
+    async def callback(self, i: disnake.MessageInteraction, button: disnake.Button):
+        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
+
+class View_mk_q(disnake.ui.View):
+    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
+        self.add_item(mk_q(bot, howmanyleft))
+
 class startmk_q(disnake.ui.Button):
     def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
         self.bot = bot
@@ -346,14 +359,14 @@ async def on_ready():
     }
     doPlatformRespectiveCMD[platform.system()]()
     print(f"""{bolds.YELLOW}
-☢ ☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢
-☢{bolds.RED} _   _       _        ____        _   {bolds.YELLOW}☢
-☢{bolds.RED}| \ | |     | |      |  _ \      | |  {bolds.YELLOW}☢
-☢{bolds.RED}|  \| |_   _| | _____| |_) | ___ | |_ {bolds.YELLOW}☢
-☢{bolds.RED}| . ` | | | | |/ / _ \  _ < / _ \| __|{bolds.YELLOW}☢
-☢{bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
-☢{bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
-☢ ☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢☢""" + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ 
+☢ {bolds.RED} _   _       _        ____        _   {bolds.YELLOW}☢
+☢ {bolds.RED}| \ | |     | |      |  _ \      | |  {bolds.YELLOW}☢
+☢ {bolds.RED}|  \| |_   _| | _____| |_) | ___ | |_ {bolds.YELLOW}☢
+☢ {bolds.RED}| . ` | | | | |/ / _ \  _ < / _ \| __|{bolds.YELLOW}☢
+☢ {bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
+☢ {bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -368,7 +381,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), components=disnake.ui.Button(style=disnake.ButtonStyle.green, label=f"Start writing the questions", custom_id='answer_questions_page1'))
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), view=View_mk_q)
             return
         except ValueError:
             await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
