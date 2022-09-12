@@ -335,7 +335,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
 
 @bot.event
 async def on_button_click(i: disnake.MessageInteraction):
-    if i.data.custom_id == "modal_audit_rol_dels":
+    if i.data.custom_id == "answer_questions_page1":
         await i.response.send_modal(
             disnake.ui.Modal(
                 title="questions page 1", 
