@@ -332,7 +332,19 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
         return
-
+    if i.data.custom_id == "answer_questions_page1":
+        QandA = {}
+        for key, val in i.text_values:
+            if key == "Q1":
+                
+            if key == "Q2":
+                ""
+            if key == "Q3":
+                ""
+            if key == "Q4":
+                ""
+            if key == "Q5":
+                ""
 @bot.event
 async def on_button_click(i: disnake.MessageInteraction):
     if i.data.custom_id == "answer_questions_page1":
@@ -340,7 +352,7 @@ async def on_button_click(i: disnake.MessageInteraction):
             disnake.ui.Modal(
                 title="questions page 1", 
                 components=[
-                    disnake.ui.TextInput(label=f"Q1", placeholder='We', required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
+                    disnake.ui.TextInput(label=f"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", placeholder='We', required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
                     disnake.ui.TextInput(label=f"Q2", placeholder='Love', required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
                     disnake.ui.TextInput(label=f"Q3", placeholder='Huge', required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
                     disnake.ui.TextInput(label=f"Q4", placeholder='Sweaty', required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
