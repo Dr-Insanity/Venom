@@ -100,8 +100,8 @@ class mk_q(disnake.ui.Button):
         await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
 
 class View_mk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
-        self.add_item(mk_q(bot, howmanyleft))
+    def __init__(self, bot: commands.InteractionBot, amount: int):
+        self.add_item(mk_q(bot, amount))
 
 class startmk_q(disnake.ui.Button):
     def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
@@ -381,7 +381,7 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), view=View_mk_q)
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), view=View_mk_q(bot, str(value)))
             return
         except ValueError:
             await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
