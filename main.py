@@ -90,8 +90,21 @@ if token is None:
 
 bot = commands.InteractionBot()
 
+class startmk_q(disnake.ui.Button):
+    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
+        self.bot = bot
+        self.howmanyleft = howmanyleft
+        super().__init__(style=disnake.ButtonStyle.blurple, label=f"{howmanyleft} more to go! Let's go!", custom_id=f"randomn")
+    
+    async def callback(self, i: disnake.MessageInteraction, button: disnake.Button):
+        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
+
+class continuemk_q(disnake.ui.View):
+    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
+        self.add_item(startmk_q(bot, howmanyleft))
+
 class mk_questions(disnake.ui.Modal):
-    def __init__(self, bot: commands.Bot, amount: int):
+    def __init__(self, bot: commands.InteractionBot, amount: int):
         self.amount = amount
         self.bot = bot
         comps: list[disnake.Component] = []
@@ -107,7 +120,7 @@ class mk_questions(disnake.ui.Modal):
         await i.response.send_message(embed=disnake.Embed(title=f"Something went wrong", description=f"```{str(error.with_traceback())}```", color=disnake.Colour.red()))
 
     async def callback(self, i: disnake.ModalInteraction):
-        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`", color=disnake.Colour.green()))
+        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`", color=disnake.Colour.green()), view=continuemk_q(self.bot, self.amount))
 
 
 class select_home_guild(disnake.ui.Select):
@@ -390,26 +403,6 @@ async def on_modal_submit(i: disnake.ModalInteraction):
                 QandA[plchldr5] = val
 
         await i.response.send_modal(mk_questions())
-
-
-
-
-@bot.event
-async def on_button_click(i: disnake.MessageInteraction):
-    if i.data.custom_id == "answer_questions_page1":
-        await i.response.send_modal(
-            disnake.ui.Modal(
-                title="questions page 1", 
-                components=[
-                    disnake.ui.TextInput(label=f"Question 1", placeholder="What is your full name?", required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
-                    disnake.ui.TextInput(label=f"Question 2", placeholder="What is your age?", required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
-                    disnake.ui.TextInput(label=f"Question 3", placeholder="What is your experiences in other servers as <role> ?", required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
-                    disnake.ui.TextInput(label=f"Question 4", placeholder="What makes you different than the average Joe?", required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
-                    disnake.ui.TextInput(label=f"Question 5", placeholder="There's a chat beef going on. What do you do?", required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
-                ], 
-                custom_id='questions_page1'
-            )
-        )
 
 @bot.event
 async def on_dropdown(i: disnake.MessageInteraction):
