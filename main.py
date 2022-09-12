@@ -211,7 +211,7 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
         return
         results = mod_config('channel_del_audit', f"{msg.content}")
         if results == "set_key_in_default":
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs").set_thumbnail(file=logo()))
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
             return
     if option == "Change text that will appear on audit logs for member punishments (ban, kick, etc)":
         m = await i.send(content=f"> ✅ **Changing text that will appear on their audit logs for member nuke actions (i.e. ban, kick)**\nWhat shall be the text? *(Please type now)*")
@@ -223,7 +223,7 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
             return
         results = mod_config('members_punish_audit', f"{msg.content}")
         if results == "set_key_in_default":
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs").set_thumbnail(file=logo()))
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
             return
     if option == "Change target server":
         m = await i.send(content=f"> ✅ **Specifying target server**", view=adddrop_ls_servers())
@@ -333,22 +333,22 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked").set_thumbnail(file=logo()))
+            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()))
             return
         except ValueError:
-            await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)").set_thumbnail(file=logo()))
+            await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "questions_page1":
         plchldr1 = i.data._components[0].children[0].placeholder
