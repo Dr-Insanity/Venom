@@ -289,13 +289,7 @@ async def on_ready():
             timestamp=datetime.now())
             .set_author(name=f"Hello, {bot.owner.display_name}")
             .set_footer(text=f"Made with ❤️")
-            .set_thumbnail(url=bot.user.display_avatar), components=disnake.ui.Modal("questions page 1", components=[
-                disnake.ui.TextInput(label=f"Q1", placeholder='We', required=False, style=disnake.TextInputStyle.short),
-                disnake.ui.TextInput(label=f"Q2", placeholder='Love', required=False, style=disnake.TextInputStyle.short),
-                disnake.ui.TextInput(label=f"Q3", placeholder='Huge', required=False, style=disnake.TextInputStyle.short),
-                disnake.ui.TextInput(label=f"Q4", placeholder='Sweaty', required=False, style=disnake.TextInputStyle.short),
-                disnake.ui.TextInput(label=f"Q5", placeholder='Asses', required=False, style=disnake.TextInputStyle.short),
-                ])
+            .set_thumbnail(url=bot.user.display_avatar), components=disnake.ui.Button(style=disnake.ButtonStyle.grey, label=f"Begin", custom_id='answer_questions_page1')
         )
     def win_clear():
         run("cls", shell=True)
@@ -338,6 +332,23 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs").set_thumbnail(file=logo()))
         return
+
+@bot.event
+async def on_button_click(i: disnake.MessageInteraction):
+    if i.data.custom_id == "modal_audit_rol_dels":
+        await i.response.send_modal(
+            disnake.ui.Modal(
+                title="questions page 1", 
+                components=[
+                    disnake.ui.TextInput(label=f"Q1", placeholder='We', required=False, style=disnake.TextInputStyle.short, custom_id='Q1'),
+                    disnake.ui.TextInput(label=f"Q2", placeholder='Love', required=False, style=disnake.TextInputStyle.short, custom_id='Q2'),
+                    disnake.ui.TextInput(label=f"Q3", placeholder='Huge', required=False, style=disnake.TextInputStyle.short, custom_id='Q3'),
+                    disnake.ui.TextInput(label=f"Q4", placeholder='Sweaty', required=False, style=disnake.TextInputStyle.short, custom_id='Q4'),
+                    disnake.ui.TextInput(label=f"Q5", placeholder='Asses', required=False, style=disnake.TextInputStyle.short, custom_id='Q5'),
+                ], 
+                custom_id='questions_page1'
+            )
+        )
 
 @bot.event
 async def on_dropdown(i: disnake.MessageInteraction):
