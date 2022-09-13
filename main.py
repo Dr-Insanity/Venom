@@ -69,7 +69,7 @@ def logo():
 
 class bolds:
    PURPLE = '\033[95m'
-   WHITE = '\033[15m'
+   WHITE = Fore.WHITE
    CYAN = '\033[96m'
    DARKCYAN = '\033[36m'
    BLUE = '\033[94m'
