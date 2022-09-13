@@ -96,10 +96,10 @@ class mk_q(disnake.ui.View):
         self.amount = amount
         self.children = []
         self.timeout = 0
-
-        @disnake.ui.button(label='Start writing the questions', custom_id=f"answer_questions_page1", style=disnake.ButtonStyle.blurple)
-        async def letsgoow(button: disnake.ui.Button, i: disnake.MessageInteraction):
-            await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
+        self.add_item(self.letsgoow)
+    @disnake.ui.button(label='Start writing the questions', custom_id=f"answer_questions_page1", style=disnake.ButtonStyle.blurple)
+    async def letsgoow(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
+        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
 
 class startmk_q(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
