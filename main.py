@@ -330,8 +330,6 @@ async def on_ready():
         dm_conv = await bot.owner.create_dm()
         await dm_conv.send(embed=disnake.Embed(title=f"💥 Welcome to Nukebot! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
 
-    dm_conv = await bot.owner.create_dm()
-
     def win_clear():
         run("cls", shell=True)
 
