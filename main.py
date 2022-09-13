@@ -190,8 +190,8 @@ __home_serverid = [get_var('home_server')]
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
-print(f'{bolds.BOLD}{bolds.WHITE}[{bolds.YELLOW}☢ {bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.CYAN} Loading up {bolds.YELLOW}☢ {bolds.RED}NukeBot{bolds.END}')
-
+print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NUKEBOT{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Loading up {bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NukeBot{bolds.END}')
+print('\033]0;☢NukeBot\x07')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
