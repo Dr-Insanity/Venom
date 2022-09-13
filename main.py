@@ -108,7 +108,7 @@ class startmk_q(disnake.ui.View):
     
     @disnake.ui.button(label='Continue', custom_id=f"randomn", style=disnake.ButtonStyle.blurple)
     async def claim_daily_all_ghostos(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
-        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"{self.howmanyleft} more to go! Let's gowwww!"))
+        await i.response.send_modal(mk_questions(self.bot, self.howmanyleft))
 
 class mk_questions(disnake.ui.Modal):
     def __init__(self, bot: commands.InteractionBot, amount: int):
@@ -128,7 +128,7 @@ class mk_questions(disnake.ui.Modal):
         await i.response.send_message(embed=disnake.Embed(title=f"Something went wrong", description=f"```{str(error.with_traceback())}```", color=disnake.Colour.red()))
 
     async def callback(self, i: disnake.ModalInteraction):
-        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.amount))
+        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.q))
 
 class ask_qs(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, amount: int):
