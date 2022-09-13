@@ -124,15 +124,14 @@ class mk_questions(disnake.ui.Modal):
             comp = disnake.ui.TextInput(
                 label=f'QUESTION {begin_at}', custom_id=f'Q{begin_at}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
-            self.begin_at += 1
             if self.q == amount:
                 break
             self.q += 1
-
+            self.begin_at += 1
             comps.append(comp)
         super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
 
-    async def on_error(self, error: Exception, i: disnake.ModalInteraction) -> None:
+    async def on_error(self, error: Exception, i: disnake.ModalInteraction):
         await i.response.send_message(embed=disnake.Embed(title=f"Something went wrong", description=f"```{str(error.with_traceback())}```", color=disnake.Colour.red()))
 
     async def callback(self, i: disnake.ModalInteraction):
