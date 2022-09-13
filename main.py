@@ -130,7 +130,7 @@ class mk_questions(disnake.ui.Modal):
         await i.response.send_message(embed=disnake.Embed(title=f"Something went wrong", description=f"```{str(error.with_traceback())}```", color=disnake.Colour.red()))
 
     async def callback(self, i: disnake.ModalInteraction):
-        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.q))
+        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.amount-self.q))
 
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
