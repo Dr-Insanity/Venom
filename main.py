@@ -120,6 +120,8 @@ class mk_questions(disnake.ui.Modal):
             comp = disnake.ui.TextInput(
                 label=f'QUESTION {self.q+1}', custom_id=f'Q{self.q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
+            if self.q == amount:
+                break
             self.q += 1
             comps.append(comp)
         super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
