@@ -363,7 +363,7 @@ async def on_ready():
 ☢ {bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
 ☢ {bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
-print(f'{bolds.WHITE}[{bolds.YELLOW}☢ {bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.CYAN} Loaded{bolds.END}')
+    print(f'{bolds.WHITE}[{bolds.YELLOW}☢ {bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Loaded{bolds.END}')
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -371,6 +371,7 @@ async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error
         await i.send(embed=disnake.Embed(description=f">>> This bot should only be operated by it's owner, which is **{bot.owner}** or {bot.owner.mention}", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     raise error
+
 
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
