@@ -69,6 +69,7 @@ def logo():
 
 class bolds:
    PURPLE = '\033[95m'
+   WHITE = '\033[15m'
    CYAN = '\033[96m'
    DARKCYAN = '\033[36m'
    BLUE = '\033[94m'
@@ -188,6 +189,8 @@ __home_serverid = [get_var('home_server')]
 
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
+
+print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED}NUKEBOT{bolds.WHITE}] {bolds.CYAN} Loading up {bolds.YELLOW}☢{bolds.RED}NukeBot{bolds.END}')
 
 class Functs:
     def guild_found():
