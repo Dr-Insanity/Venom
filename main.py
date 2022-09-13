@@ -122,7 +122,7 @@ class mk_questions(disnake.ui.Modal):
             self.begin_at = 0
         while self.q < amount and len(comps) < 5:
             comp = disnake.ui.TextInput(
-                label=f'QUESTION {begin_at+1}', custom_id=f'Q{begin_at+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+                label=f'QUESTION {self.begin_at+1}', custom_id=f'Q{self.begin_at+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
             if self.q == amount:
                 break
