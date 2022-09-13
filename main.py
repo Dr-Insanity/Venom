@@ -118,7 +118,7 @@ class mk_questions(disnake.ui.Modal):
         q = 0
         while q < 5:
             comp = disnake.ui.TextInput(
-                label=f'QUESTION {q}', custom_id=f'Q{q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+                label=f'QUESTION {q+1}', custom_id=f'Q{q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
             q += 1
             comps.append(comp)
