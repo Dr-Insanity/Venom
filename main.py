@@ -94,6 +94,7 @@ class mk_q(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, amount: int):
         self.bot = bot
         self.amount = amount
+        self.children = []
     
     @disnake.ui.button(label='Start writing the questions', custom_id=f"answer_questions_page1", style=disnake.ButtonStyle.blurple)
     async def letsgoow(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
