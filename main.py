@@ -101,28 +101,34 @@ class mk_q(disnake.ui.View):
         await i.response.send_modal(mk_questions(self.bot, int(self.amount)))
 
 class startmk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
+    def __init__(self, bot: commands.InteractionBot, howmanyleft: int, begin_at: int=None):
         self.bot = bot
         self.howmanyleft = howmanyleft
+        self.begin_at = begin_at
         super().__init__(timeout=None)
     
     @disnake.ui.button(label='Continue', custom_id=f"randomn", style=disnake.ButtonStyle.blurple)
     async def claim_daily_all_ghostos(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
-        await i.response.send_modal(mk_questions(self.bot, self.howmanyleft))
+        await i.response.send_modal(mk_questions(self.bot, self.howmanyleft, self.begin_at))
 
 class mk_questions(disnake.ui.Modal):
-    def __init__(self, bot: commands.InteractionBot, amount: int):
+    def __init__(self, bot: commands.InteractionBot, amount: int, begin_at=None):
         self.amount = amount
         self.bot = bot
+        self.begin_at = begin_at
         comps: list[disnake.Component] = []
         self.q = 0
+        if begin_at is None:
+            self.begin_at = 1
         while self.q < amount and len(comps) < 5:
             comp = disnake.ui.TextInput(
-                label=f'QUESTION {self.q+1}', custom_id=f'Q{self.q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+                label=f'QUESTION {begin_at}', custom_id=f'Q{begin_at}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
+            self.begin_at += 1
             if self.q == amount:
                 break
             self.q += 1
+
             comps.append(comp)
         super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
 
@@ -133,7 +139,7 @@ class mk_questions(disnake.ui.Modal):
         if self.amount-self.q == 0:
             await i.response.send_message(embed=disnake.Embed(title=f"All questions were saved successfully!", description=f"Next time someone submits a staff application, they will be on the news.\n(They will see the newly updated questions)", color=disnake.Colour.green()))
             return
-        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.amount-self.q))
+        await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`\n\n**Questions yet to be typed**\n`{self.amount-self.q}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.amount-self.q, self.begin_at))
 
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
