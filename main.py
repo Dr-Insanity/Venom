@@ -115,7 +115,7 @@ class mk_questions(disnake.ui.Modal):
         self.amount = amount
         self.bot = bot
         comps: list[disnake.Component] = []
-        while len(comps) < amount and len(comps) < 7:
+        while len(comps) < amount and len(comps) < 6:
             comp = disnake.ui.TextInput(
                 label=f'QUESTION {amount}', custom_id=f'Q{amount}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
