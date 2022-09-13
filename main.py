@@ -98,7 +98,7 @@ class mk_q(disnake.ui.View):
     
     @disnake.ui.button(label='Start writing the questions', custom_id=f"answer_questions_page1", style=disnake.ButtonStyle.blurple)
     async def letsgoow(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
-        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
+        await i.response.send_modal(mk_questions(self.bot, self.amount))
 
 class startmk_q(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
@@ -129,6 +129,10 @@ class mk_questions(disnake.ui.Modal):
     async def callback(self, i: disnake.ModalInteraction):
         await i.response.send_message(embed=disnake.Embed(title=f"Great, results below!", description=f"**Amount of questions we need to write**\n`{self.amount}`\n\n**Written in the previous Modal**\n`{len(i.data._components)}`", color=disnake.Colour.green()), view=startmk_q(self.bot, self.amount))
 
+class ask_qs(disnake.ui.View):
+    def __init__(self, bot: commands.InteractionBot, amount: int):
+        super().__init__()
+        self.add_item(mk_questions(bot, amount))
 
 class select_home_guild(disnake.ui.Select):
     def __init__(self):
