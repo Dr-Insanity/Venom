@@ -115,12 +115,12 @@ class mk_questions(disnake.ui.Modal):
         self.amount = amount
         self.bot = bot
         comps: list[disnake.Component] = []
-        q = 0
-        while q < 5:
+        self.q = 0
+        while self.q < 5:
             comp = disnake.ui.TextInput(
-                label=f'QUESTION {q+1}', custom_id=f'Q{q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+                label=f'QUESTION {self.q+1}', custom_id=f'Q{self.q+1}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
-            q += 1
+            self.q += 1
             comps.append(comp)
         super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
 
@@ -386,26 +386,6 @@ async def on_modal_submit(i: disnake.ModalInteraction):
         mod_config('role_del_audit', value)
         await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
-    if i.data.custom_id == "questions_page1":
-        plchldr1 = i.data._components[0].children[0].placeholder
-        plchldr2 = i.data._components[0].children[0].placeholder
-        plchldr3 = i.data._components[0].children[0].placeholder
-        plchldr4 = i.data._components[0].children[0].placeholder
-        plchldr5 = i.data._components[0].children[0].placeholder
-        QandA = {}
-        for key, val in i.text_values:
-            if key == "Q1":
-                QandA[plchldr1] = val
-            if key == "Q2":
-                QandA[plchldr2] = val
-            if key == "Q3":
-                QandA[plchldr3] = val
-            if key == "Q4":
-                QandA[plchldr4] = val
-            if key == "Q5":
-                QandA[plchldr5] = val
-
-        await i.response.send_modal(mk_questions())
 
 @bot.event
 async def on_dropdown(i: disnake.MessageInteraction):
