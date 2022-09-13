@@ -191,7 +191,6 @@ if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
 print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NUKEBOT{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Loading up {bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NukeBot{bolds.END}')
-print('\033]0;☢NukeBot\x07')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
@@ -363,7 +362,7 @@ async def on_ready():
 ☢ {bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
 ☢ {bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
-    print(f'{bolds.WHITE}[{bolds.YELLOW}☢ {bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Loaded{bolds.END}')
+    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Loaded{bolds.END}')
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
