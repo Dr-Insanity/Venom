@@ -115,11 +115,12 @@ class mk_questions(disnake.ui.Modal):
         self.amount = amount
         self.bot = bot
         comps: list[disnake.Component] = []
-        while len(comps) < amount and len(comps) < 5:
+        q = 1
+        while q < 5:
             comp = disnake.ui.TextInput(
-                label=f'QUESTION {amount}', custom_id=f'Q{amount}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
+                label=f'QUESTION {q}', custom_id=f'Q{q}', style=disnake.TextInputStyle.multi_line, placeholder=f'Type a question', required=True
             )
-            amount - 1
+            q += 1
             comps.append(comp)
         super().__init__(title="Set up questions", custom_id="questions_page1", components=comps)
 
