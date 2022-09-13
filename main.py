@@ -90,31 +90,24 @@ if token is None:
 
 bot = commands.InteractionBot()
 
-class mk_q(disnake.ui.Button):
+class mk_q(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, amount: int):
         self.bot = bot
         self.amount = amount
-        super().__init__(style=disnake.ButtonStyle.green, label=f"Start writing the questions", custom_id=f"answer_questions_page1")
     
-    async def callback(self, i: disnake.MessageInteraction, button: disnake.Button):
+    @disnake.ui.button(label='Start writing the questions', custom_id=f"answer_questions_page1", style=disnake.ButtonStyle.blurple)
+    async def letsgoow(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
         await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
-
-class View_mk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, amount: int):
-        self.add_item(mk_q(bot, amount))
 
 class startmk_q(disnake.ui.Button):
     def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
         self.bot = bot
         self.howmanyleft = howmanyleft
-        super().__init__(style=disnake.ButtonStyle.blurple, label=f"{howmanyleft} more to go! Let's go!", custom_id=f"randomn")
     
-    async def callback(self, i: disnake.MessageInteraction, button: disnake.Button):
-        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"Let's go let's go let's go!!!!"))
-
-class continuemk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, howmanyleft: int):
-        self.add_item(startmk_q(bot, howmanyleft))
+    @disnake.ui.button(label='Continue', custom_id=f"randomn", style=disnake.ButtonStyle.blurple)
+    async def claim_daily_all_ghostos(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
+        """"""
+        await i.response.send_message(embed=disnake.Embed(title=f"Leeet's Gooooooooooowww", description=f"{self.howmanyleft} more to go! Let's gowwww!"))
 
 class mk_questions(disnake.ui.Modal):
     def __init__(self, bot: commands.InteractionBot, amount: int):
