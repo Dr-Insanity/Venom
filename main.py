@@ -185,12 +185,12 @@ class Config:
     home_server = None
 
 __target_serverid = get_var('target_server')
-__home_serverid = [get_var('home_server')]
+__home_serverid = [get_var('home_server')] # type: list[int]
 
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
-print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NUKEBOT{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Loading up {bolds.YELLOW}{bolds.BOLD}☢{bolds.RED}{bolds.BOLD}NukeBot{bolds.END}')
+print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.RED}{bolds.BOLD}NUKEBOT{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.RED}{bolds.BOLD}NukeBot {bolds.CYAN}{bolds.BOLD}online{bolds.END}')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
@@ -361,8 +361,8 @@ async def on_ready():
 ☢ {bolds.RED}| . ` | | | | |/ / _ \  _ < / _ \| __|{bolds.YELLOW}☢
 ☢ {bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
 ☢ {bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
-☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.GREEN}Keep this open.\nAll good on this side.\nPlease go to Discord now.")
-    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Loaded{bolds.END}')
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.RED}{bolds.UNDERLINE}Keep this open!\n{bolds.WHITE}All {bolds.GREEN}good {bolds.WHITE}on this side.\nPlease go to Discord now.")
+    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -374,7 +374,7 @@ async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error
 
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
-    value = i.data._components[0].children[0].value
+    value = i.data.values()
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
