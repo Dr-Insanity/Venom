@@ -295,7 +295,19 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
         )
 @bot.slash_command(guild_ids=__home_serverid)
 async def permissions_for(i: disnake.ApplicationCommandInteraction):
-    """"""
+    guild_id = get_var('target_server')
+    if guild_id is None:
+        await i.send(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+        return
+    g = bot.get_guild(int(guild_id))
+    global_perms = f""
+    perms = {
+        "True":"✅",
+        "False":"❌",
+    }
+    for permission, value in g.me.guild_permissions:
+        global_perms += f"""{permission} {perms[str(value)]}\n"""
+    await i.send(embed=disnake.Embed(title=f"Global permissions we have", description=f"```{global_perms}```", color=disnake.Colour.blurple()))
 
 @bot.slash_command(guild_ids=__home_serverid)
 @commands.is_owner()
