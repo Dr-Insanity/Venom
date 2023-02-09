@@ -306,7 +306,10 @@ async def permissions_for(i: disnake.ApplicationCommandInteraction):
         "False":"❌",
     }
     for permission, value in g.me.guild_permissions:
-        global_perms += f"""{permission} {perms[str(value)]}\n"""
+        if permission == "administrator" and value:
+            global_perms = f"Administrator 👑 (All permissions)"
+            break
+        global_perms += f"""{perms[str(value)]} | {permission}\n"""
     await i.send(embed=disnake.Embed(title=f"Global permissions we have", description=f"```{global_perms}```", color=disnake.Colour.blurple()))
 
 @bot.slash_command(guild_ids=__home_serverid)
