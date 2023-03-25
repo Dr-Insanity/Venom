@@ -12,8 +12,8 @@ try:
 except IndexError:
     pass
 except KeyError:
-    print(f"Unknown option for Nukebot: '{argv[1]}'")
-    print(f"Ignoring and continuing to launch Nukebot.")
+    print(f"Unknown option for Venom: '{argv[1]}'")
+    print(f"Ignoring and continuing to launch Venom.")
 
 import json
 def del_pair(key: str):
@@ -68,7 +68,7 @@ def logo():
     return disnake.File('assets/images/NukebotLogo.png')
 
 class bolds:
-   PURPLE = '\033[95m'
+   PURPLE = '\033[38;5;57m'
    WHITE = Fore.WHITE
    CYAN = '\033[96m'
    DARKCYAN = '\033[36m'
@@ -190,7 +190,7 @@ __home_serverid = [get_var('home_server')] # type: list[int]
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
-print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.RED}{bolds.BOLD}NUKEBOT{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.RED}{bolds.BOLD}NukeBot {bolds.CYAN}{bolds.BOLD}online{bolds.END}')
+print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom {bolds.CYAN}{bolds.BOLD}online{bolds.END}...')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
@@ -228,7 +228,7 @@ optionss = commands.option_enum(
 @bot.slash_command(guild_ids=__home_serverid)
 @commands.is_owner()
 async def configure(i: disnake.ApplicationCommandInteraction, option: optionss = commands.Param(description="Choose an option to set / change")):
-    """Configure Nukebot."""
+    """Configure Venom."""
     if str(option) == "Change text that will appear on audit logs for role deletions":
         await i.response.send_modal(
             modal=disnake.ui.Modal(
@@ -355,7 +355,7 @@ async def on_ready():
         quit()
     if get_var('Not Setup Yet!'):
         dm_conv = await bot.owner.create_dm()
-        await dm_conv.send(embed=disnake.Embed(title=f"💥 Welcome to Nukebot! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
+        await dm_conv.send(embed=disnake.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
 
     def win_clear():
         run("cls", shell=True)
@@ -369,15 +369,16 @@ async def on_ready():
     }
     doPlatformRespectiveCMD[platform.system()]()
     print(f"""{bolds.YELLOW}
-☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ 
-☢ {bolds.RED} _   _       _        ____        _   {bolds.YELLOW}☢
-☢ {bolds.RED}| \ | |     | |      |  _ \      | |  {bolds.YELLOW}☢
-☢ {bolds.RED}|  \| |_   _| | _____| |_) | ___ | |_ {bolds.YELLOW}☢
-☢ {bolds.RED}| . ` | | | | |/ / _ \  _ < / _ \| __|{bolds.YELLOW}☢
-☢ {bolds.RED}| |\  | |_| |   <  __/ |_) | (_) | |_ {bolds.YELLOW}☢
-☢ {bolds.RED}|_| \_|\__,_|_|\_\___|____/ \___/ \__|{bolds.YELLOW}☢
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢
+☢ {bolds.PURPLE} ___      __                          {bolds.YELLOW}☢
+☢ {bolds.PURPLE}( ) \    / /                          {bolds.YELLOW}☢
+☢ {bolds.PURPLE}|/ \ \  / /__ _ __   ___  _ __ ___    {bolds.YELLOW}☢
+☢ {bolds.PURPLE}    \ \/ / _ \ '_ \ / _ \| '_ ` _ \   {bolds.YELLOW}☢
+☢ {bolds.PURPLE}     \  /  __/ | | | (_) | | | | | |_ {bolds.YELLOW}☢
+☢ {bolds.PURPLE}      \/ \___|_| |_|\___/|_| |_| |_( ){bolds.YELLOW}☢
+☢ {bolds.PURPLE}                                   |/ {bolds.YELLOW}☢
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.RED}{bolds.UNDERLINE}Keep this open!\n{bolds.WHITE}All {bolds.GREEN}good {bolds.WHITE}on this side.\nPlease go to Discord now.")
-    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.RED} NUKEBOT{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
+    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -438,7 +439,7 @@ async def on_dropdown(i: disnake.MessageInteraction):
         if g is None:
             await i.response.send_message(embed=disnake.Embed(description=f">>> Could not find target server! :/\nHint: `Am I still in there?`", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             return
-        await i.response.edit_message(embeds=[disnake.Embed(title=f"💥 Welcome to Nukebot! ☢️ :D", description=f"To continue, please **specify the following**\n> ` ✅ ` **You selected {g.name}**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), disnake.Embed(title=f"Success!", description=f">>> {g.name} will now be the only server you are supposed to use commands on. Happy nuking! 💥", color=disnake.Color.green()).set_thumbnail(file=logo())], view=None)
+        await i.response.edit_message(embeds=[disnake.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> ` ✅ ` **You selected {g.name}**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), disnake.Embed(title=f"Success!", description=f">>> {g.name} will now be the only server you are supposed to use commands on. Happy nuking! 💥", color=disnake.Color.green()).set_thumbnail(file=logo())], view=None)
         mod_config('home_server', g.id)
         del_pair('Not Setup Yet!')
 
