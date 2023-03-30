@@ -1,19 +1,33 @@
 from os import getenv, execv
 from subprocess import run
 import platform
-import asyncio
 from sys import argv, executable
+import sys
+from Venom.weblogin import app
+from waitress import serve
+
+BOLD = '\033[1m'
+PURPLE = '\033[38;5;57m'
+
 try:
     def dep_installer():
-        from assets.install_deps import Dependencies
+        from Venom.install_deps import Dependencies
         Dependencies.install()
     known_opts = {"--install-dependencies":dep_installer}
     known_opts[argv[1]]()
 except IndexError:
     pass
 except KeyError:
-    print(f"Unknown option for Venom: '{argv[1]}'")
-    print(f"Ignoring and continuing to launch Venom.")
+    def launchVenomAnyway():
+        print(f"Ignoring and continuing to launch Venom.")
+    try:
+        from colorama import Fore, init
+        init(autoreset=True)
+        print(f"{Fore.RED}{BOLD}Unknown option {Fore.WHITE}{BOLD}for {PURPLE}{BOLD}Venom{Fore.WHITE}: {Fore.WHITE}'{Fore.LIGHTBLACK_EX}{argv[1]}{Fore.WHITE}'")
+        launchVenomAnyway()
+    except ImportError:
+        print(f"Unknown option for Venom: '{argv[1]}'")
+        launchVenomAnyway()
 
 import json
 def del_pair(key: str):
@@ -47,9 +61,11 @@ def get_var(key: str):
             return val
         except KeyError:
             return None
+        except Exception as e:
+            print(e)
 
 if get_var('Not Setup Yet!'):
-    from assets.install_deps import Dependencies
+    from Venom.install_deps import Dependencies
     Dependencies.install()
 
 import disnake
@@ -62,7 +78,7 @@ from time import mktime
 from colorama import init, Fore
 from datetime import datetime
 
-init()
+init(autoreset=True)
 
 def logo():
     return disnake.File('assets/images/NukebotLogo.png')
@@ -80,14 +96,14 @@ class bolds:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
+prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
 load_dotenv(".env")
 token = getenv("token")
 if token is None:
-    token_from_input = input("Bot's token> ")
-    f = open(".env", "w+")
-    f.write(f"token={token_from_input}")
-    f.close()
+    sys.stdout.write(f"{prefix}{Fore.WHITE}It looks like it's your first time. Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bolds.BOLD}http://127.0.0.1:8080/configure\n")
+    serve(app.wsgi_app)
     load_dotenv(".env")
+    token = getenv("token")
 
 bot = commands.InteractionBot()
 
@@ -106,7 +122,7 @@ class startmk_q(disnake.ui.View):
         self.bot = bot
         self.howmanyleft = howmanyleft
         self.begin_at = begin_at
-        super().__init__(timeout=None)
+        super().__init__(timout=None)
     
     @disnake.ui.button(label='Continue', custom_id=f"randomn", style=disnake.ButtonStyle.blurple)
     async def claim_daily_all_ghostos(self, button: disnake.ui.Button, i: disnake.MessageInteraction):
@@ -190,7 +206,7 @@ __home_serverid = [get_var('home_server')] # type: list[int]
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
-print(f'{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] {bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom {bolds.CYAN}{bolds.BOLD}online{bolds.END}...')
+print(f'{prefix}{bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom {bolds.CYAN}{bolds.BOLD}online{bolds.END}...')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
@@ -294,6 +310,7 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
             )
         )
 @bot.slash_command(guild_ids=__home_serverid)
+@commands.is_owner()
 async def permissions_for(i: disnake.ApplicationCommandInteraction):
     guild_id = get_var('target_server')
     if guild_id is None:
@@ -378,7 +395,7 @@ async def on_ready():
 ☢ {bolds.PURPLE}      \/ \___|_| |_|\___/|_| |_| |_( ){bolds.YELLOW}☢
 ☢ {bolds.PURPLE}                                   |/ {bolds.YELLOW}☢
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.RED}{bolds.UNDERLINE}Keep this open!\n{bolds.WHITE}All {bolds.GREEN}good {bolds.WHITE}on this side.\nPlease go to Discord now.")
-    print(f'{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
+    print(f'{prefix}{bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
 
 @bot.event
 async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
@@ -386,7 +403,6 @@ async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error
         await i.send(embed=disnake.Embed(description=f">>> This bot should only be operated by it's owner, which is **{bot.owner}** or {bot.owner.mention}", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     raise error
-
 
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
@@ -400,16 +416,16 @@ async def on_modal_submit(i: disnake.ModalInteraction):
             await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             return
     if i.data.custom_id == "modal_audit_rol_dels":
-        mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        mod_config('role_del_audit', list(value)[1][1]["components"])
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
-        mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        mod_config('role_del_audit', list(value)[1][1])
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
-        mod_config('role_del_audit', value)
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        mod_config('role_del_audit', list(value)[1][1])
+        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
 
 @bot.event
@@ -443,7 +459,7 @@ async def on_dropdown(i: disnake.MessageInteraction):
         mod_config('home_server', g.id)
         del_pair('Not Setup Yet!')
 
-try:    
+try:
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
