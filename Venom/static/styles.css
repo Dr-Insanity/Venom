@@ -34,9 +34,60 @@
 		url('fonts/GintoNormalRegular.woff2') format('truetype');
 }
 
+@font-face {
+	font-family: "GG sans";
+	src: url('fonts/ggsans-Normal.ttf');
+	src: url('fonts/ggsans-Normal.ttf') format('embedded-opentype'),
+		url('fonts/ggsans-Normal.ttf') format('woff2'),
+		url('fonts/ggsans-Normal.ttf') format('woff'),
+		url('fonts/ggsans-Normal.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: "Whitney semibold";
+	src: url('fonts/whitneysemibold.otf');
+	src: url('fonts/whitneysemibold.otf') format('embedded-opentype'),
+		url('fonts/whitneysemibold.otf') format('woff2'),
+		url('fonts/whitneysemibold.otf') format('woff'),
+		url('fonts/whitneysemibold.otf') format('truetype');
+}
+
+@font-face {
+	font-family: "Whitney light";
+	src: url('fonts/whitneylight.otf');
+	src: url('fonts/whitneylight.otf') format('embedded-opentype'),
+		url('fonts/whitneylight.otf') format('woff2'),
+		url('fonts/whitneylight.otf') format('woff'),
+		url('fonts/whitneylight.otf') format('truetype');
+}
+
 p {
-	font-family: "Roboto-Thin";
-	font-size: 17px;
+	font-family: "GG sans"!important;
+	font-size: 15px;
+	cursor: default;
+}
+
+
+
+a:link {
+	color: #00A8FC;
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #00A8FC;
+}
+
+a:hover {
+	color: #00A8FC;
+	text-decoration:underline;
+	text-decoration-color: #0080ff;
+}
+
+a:active {
+	color: #00A8FC;
+	text-decoration: none;
 }
 
 .notice-bar {
@@ -57,15 +108,16 @@ p {
 }
 
 .GintoNorReg {
-	font-family: "GintoNormalRegular";
+	font-family: "GintoNormalRegular"!important;
 	font-size: 12px;
 }
 
 .Modalnotice {
 	border-radius: 4px;
+	cursor:default;
 	border: 1px solid #349dff;
 	background-color: rgb(52, 157, 255, 0.1);
-	padding: 20px;
+	padding: 10px;
 	margin-left: 0px;
 	text-align: left;
 	margin-bottom: 10px;
@@ -76,11 +128,28 @@ p {
   }
 
 .Modalsuccess {
+	cursor:default;
 	border-radius: 4px;
 	border: 1px solid #00ff9de1;
 	background-color: #00ff9d3b;
 	color: #fff;
-	padding: 20px;
+	padding: 10px;
+	margin-left: 0px;
+	text-align: left;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	width: 100%;
+	font-family: "WhitneyMedium";
+	word-wrap: break-word;
+}
+
+.Modalerror {
+	cursor:default;
+	border-radius: 4px;
+	border: 1px solid #ed4245;
+	background-color: #ed42453b;
+	color: #fff;
+	padding: 10px;
 	margin-left: 0px;
 	text-align: left;
 	margin-bottom: 10px;
@@ -141,8 +210,9 @@ p {
   }
 
   .button-blurple {
-	font-family: "WhitneyMedium";
-	font-size: 17px;
+	font-family: Whitney semibold !important;
+	cursor: pointer;
+	font-size: 15px!important;
 	text-align: center;
 	vertical-align: middle;
 	padding-top: 10px;
@@ -157,14 +227,16 @@ p {
 	border-color: #5865F2;
 	color: #fff;
 	border-radius: 3px;
+	transition: 0.2s;
   }
 
   .button-red {
-	font-family: "WhitneyMedium";
-	font-size: 17px;
+	font-family: Whitney semibold !important;
+	cursor: pointer;
+	font-size: 15px!important;
 	text-align: center;
 	vertical-align: middle;
-	padding-top: 5px;
+	padding-top: 10px;
 	padding-bottom: 5px;
 	padding-left: 5px;	
 	padding-right: 5px;
@@ -176,11 +248,13 @@ p {
 	border-color: #D83C3E;
 	color: #fff;
 	border-radius: 3px;
+	transition: 0.2s;
   }
 
   .button-grey {
-	font-family: "WhitneyMedium";
-	font-size: 17px;
+	font-family: Whitney semibold !important;
+	cursor: pointer;
+	font-size: 15px!important;
 	text-align: center;
 	vertical-align: middle;
 	padding-top: 10px;
@@ -195,11 +269,12 @@ p {
 	border-color: #4F545C;
 	color: #fff;
 	border-radius: 3px;
+	transition: 0.2s;
   }
 
   .button-grey-disabled {
-	font-family: "WhitneyMedium";
-	font-size: 18px;
+	font-family: Whitney semibold !important;
+	font-size: 15px!important;
 	text-align: center;
 	vertical-align: bottom;
 	padding-top: 10px;
@@ -228,8 +303,8 @@ p {
   }
 
   .button-grey:hover {
-	background-color: #6d7581;
-	border-color: #6d7581;
+	background-color: #4f545ccd;
+	border-color: #4f545ccd;
   }
 
   .modal-buttons {
@@ -238,11 +313,36 @@ p {
 	padding: 0.7%;
 	word-wrap: normal;
 	text-align: center;
+	vertical-align: middle;
 	border: 1px solid #2f3136;
 	width: 30%;
 	height: auto;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
+  }
+
+  .modal-without-panel {
+	background-color: #36393f;
+	margin: auto;
+	padding: 0.7%;
+	word-wrap: normal;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid #36393f;
+	width: 30%;
+	height: auto;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+  }
+
+  .modal-content-without-panel {
+	background-color: #36393f;
+	margin: auto;
+	padding: 20px;
+	text-align: center;
+	border: 1px solid #36393f;
+	width: 30%;
+	border-radius: 5px;
   }
 
   .profile-modal-banner {

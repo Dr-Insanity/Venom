@@ -69,10 +69,10 @@ if get_var('Not Setup Yet!'):
     Dependencies.install()
 
 import disnake
-from disnake.ext import commands
+from discord.ext import commands
 from dotenv import load_dotenv
 from os import getenv
-from disnake.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
+from discord.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
 from asyncio import TimeoutError
 from time import mktime
 from colorama import init, Fore
@@ -105,7 +105,7 @@ if token is None:
     load_dotenv(".env")
     token = getenv("token")
 
-bot = commands.InteractionBot()
+bot = commands.Bot(command_prefix=".", self_bot=True)
 
 class mk_q(disnake.ui.View):
     def __init__(self, bot: commands.InteractionBot, amount: int):
@@ -463,3 +463,7 @@ try:
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
+except disnake.errors.LoginFailure:
+    sys.stdout.write(f"{prefix}{Fore.RED}Token invalid. {Fore.WHITE}Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bolds.BOLD}http://127.0.0.1:8080/configure\n{Fore.CYAN+BOLD}Press CTRL + C if you're done!\n{Fore.RESET}Waiting for user to perform the needed actions and CTRL + C...\n")
+    serve(app.wsgi_app)
+    sys.stdout.write(f"{prefix}{Fore.LIGHTGREEN_EX}Great! {Fore.WHITE}Now you should restart\n")
