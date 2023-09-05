@@ -1,10 +1,13 @@
+import asyncio
 from os import getenv, execv
 from subprocess import run
 import platform
 from sys import argv, executable
 import sys
+import discord
 from Venom.weblogin import app
 from waitress import serve
+from jsontools import get_var, mod_config, del_pair
 
 BOLD = '\033[1m'
 PURPLE = '\033[38;5;57m'
@@ -29,40 +32,6 @@ except KeyError:
         print(f"Unknown option for Venom: '{argv[1]}'")
         launchVenomAnyway()
 
-import json
-def del_pair(key: str):
-    with open("conf.json", "r") as jsonfile:
-        data = json.load(jsonfile)
-        jsonfile.close()
-    try:
-        del data[key]
-        with open("conf.json", "w+") as jsonfile:
-            myJSON = json.dump(data, jsonfile, indent=2)
-            jsonfile.close()
-    except KeyError:
-        return
-
-def mod_config(key: str, value):
-    with open("conf.json", "r") as jsonfile:
-        data = json.load(jsonfile)
-        jsonfile.close()
-        
-    data[key] = value
-    with open("conf.json", "w+") as jsonfile:
-        myJSON = json.dump(data, jsonfile, indent=2)
-        jsonfile.close()
-
-def get_var(key: str):
-    with open("conf.json", "r") as jsonfile:
-        data = json.load(jsonfile)
-        jsonfile.close()
-        try:
-            val = data[key]
-            return val
-        except KeyError:
-            return None
-        except Exception as e:
-            print(e)
 
 if get_var('Not Setup Yet!'):
     from Venom.install_deps import Dependencies
@@ -81,34 +50,40 @@ from datetime import datetime
 init(autoreset=True)
 
 def logo():
-    return disnake.File('assets/images/NukebotLogo.png')
+    return discord.File('assets/images/NukebotLogo.png')
 
-class bolds:
-   PURPLE = '\033[38;5;57m'
-   WHITE = Fore.WHITE
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
-
-prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
 load_dotenv(".env")
 token = getenv("token")
+
+class VenomBot(commands.Bot):
+    
+    class bolds:
+        PURPLE = '\033[38;5;57m'
+        WHITE = Fore.WHITE
+        CYAN = '\033[96m'
+        DARKCYAN = '\033[36m'
+        BLUE = '\033[94m'
+        GREEN = '\033[92m'
+        YELLOW = '\033[93m'
+        RED = '\033[91m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+        END = '\033[0m'
+    
+    prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
+
+bot = VenomBot(command_prefix=".", self_bot=True)
+bot.owner_id = 492019506562990080
+bot.remove_command("help")
+
 if token is None:
-    sys.stdout.write(f"{prefix}{Fore.WHITE}It looks like it's your first time. Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bolds.BOLD}http://127.0.0.1:8080/configure\n")
+    sys.stdout.write(f"{bot.prefix}{Fore.WHITE}It looks like it's your first time. Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bot.bolds.BOLD}http://127.0.0.1:8080/configure\n")
     serve(app.wsgi_app)
     load_dotenv(".env")
     token = getenv("token")
 
-bot = commands.Bot(command_prefix=".", self_bot=True)
-
 class mk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, amount: int):
+    def __init__(self, bot: commands.Bot, amount: int):
         self.bot = bot
         self.amount = amount
         super().__init__(timeout=None)
@@ -118,7 +93,7 @@ class mk_q(disnake.ui.View):
         await i.response.send_modal(mk_questions(self.bot, int(self.amount)))
 
 class startmk_q(disnake.ui.View):
-    def __init__(self, bot: commands.InteractionBot, howmanyleft: int, begin_at: int=None):
+    def __init__(self, bot: commands.Bot, howmanyleft: int, begin_at: int=None):
         self.bot = bot
         self.howmanyleft = howmanyleft
         self.begin_at = begin_at
@@ -129,7 +104,7 @@ class startmk_q(disnake.ui.View):
         await i.response.send_modal(mk_questions(self.bot, self.howmanyleft, self.begin_at))
 
 class mk_questions(disnake.ui.Modal):
-    def __init__(self, bot: commands.InteractionBot, amount: int, begin_at=None):
+    def __init__(self, bot: commands.Bot, amount: int, begin_at=None):
         self.amount = amount
         self.bot = bot
         self.begin_at = begin_at
@@ -206,7 +181,7 @@ __home_serverid = [get_var('home_server')] # type: list[int]
 if str(__home_serverid) == '[None]':
     __home_serverid = [1, 2, 3]
 
-print(f'{prefix}{bolds.CYAN}{bolds.BOLD}Getting {bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom {bolds.CYAN}{bolds.BOLD}online{bolds.END}...')
+print(f'{bot.prefix}{bot.bolds.CYAN}{bot.bolds.BOLD}Getting {bot.bolds.YELLOW}{bot.bolds.BOLD}☢ {bot.bolds.PURPLE}{bot.bolds.BOLD}Venom {bot.bolds.CYAN}{bot.bolds.BOLD}online{bot.bolds.END}...')
 class Functs:
     def guild_found():
         guild = bot.get_guild(__target_serverid)
@@ -232,18 +207,27 @@ class Functs:
         print(roles_and_their_perms)
         return roles_and_their_perms
 
-optionss = commands.option_enum(
-    ["Change text that will appear on audit logs for role deletions", 
-    "Change text that will appear on audit logs for channel deletions",
-    "Change text that will appear on audit logs for member punishments (ban, kick, etc)",
-    "Change target server",
-    "Change home server",
-    "Setup questions",
-    ]
-    )
-@bot.slash_command(guild_ids=__home_serverid)
+@bot.command()
+async def flushed(ctx: commands.Context, *, spamtext: str):
+    for a in range(0, 9):
+        await ctx.send(spamtext)
+
+@bot.command()
+async def delete_my_dms(ctx: commands.Context):
+    user = bot.get_user(bot.owner_id) # type: discord.User
+    print(user)
+    await ctx.message.delete()
+    if isinstance(ctx.channel, discord.channel.DMChannel):
+        async for message in ctx.channel.history():
+            if message.author.id == 530194792701886470:
+                await message.delete(delay=0)
+
+    elif not isinstance(ctx.channel, discord.channel.DMChannel):
+        await ctx.send(silent=True, content=":no_entry: **Only in DMs, dipshit!** bruh")
+
+@bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
-async def configure(i: disnake.ApplicationCommandInteraction, option: optionss = commands.Param(description="Choose an option to set / change")):
+async def configure(i: disnake.Interaction, option: str):
     """Configure Venom."""
     if str(option) == "Change text that will appear on audit logs for role deletions":
         await i.response.send_modal(
@@ -309,9 +293,10 @@ async def configure(i: disnake.ApplicationCommandInteraction, option: optionss =
                 custom_id='setup_questions'
             )
         )
-@bot.slash_command(guild_ids=__home_serverid)
+
+@bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
-async def permissions_for(i: disnake.ApplicationCommandInteraction):
+async def permissions_for(i: disnake.Interaction):
     guild_id = get_var('target_server')
     if guild_id is None:
         await i.send(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
@@ -329,9 +314,9 @@ async def permissions_for(i: disnake.ApplicationCommandInteraction):
         global_perms += f"""{perms[str(value)]} | {permission}\n"""
     await i.send(embed=disnake.Embed(title=f"Global permissions we have", description=f"```{global_perms}```", color=disnake.Colour.blurple()))
 
-@bot.slash_command(guild_ids=__home_serverid)
+@bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
-async def start(i: disnake.ApplicationCommandInteraction):
+async def start(i: disnake.Interaction):
     guild_id = get_var('target_server')
     homeserver = get_var('home_server')
     if guild_id is None:
@@ -357,52 +342,6 @@ async def start(i: disnake.ApplicationCommandInteraction):
             await role.delete(reason=Config.role_del_reason)
         except:
             pass
-
-@bot.message_command(name=f"Delete this message", dm_permission=True, guild_ids=[])
-async def delete_message(i: disnake.ApplicationCommandInteraction):
-    await i.data.target.delete()
-    await i.response.defer()
-    await i.send(content=f"** **")
-    await i.delete_original_message()
-
-@bot.event
-async def on_ready():
-    if len(bot.guilds) == 0:
-        print(f"{bolds.RED}Hey! Hey!{bolds.END}{Fore.WHITE} Throw me at least in 1 server!")
-        quit()
-    if get_var('Not Setup Yet!'):
-        dm_conv = await bot.owner.create_dm()
-        await dm_conv.send(embed=disnake.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
-
-    def win_clear():
-        run("cls", shell=True)
-
-    def lin_clear():
-        run(["clear"])
-
-    doPlatformRespectiveCMD = {
-        'Windows':win_clear,
-        'Linux':lin_clear,
-    }
-    doPlatformRespectiveCMD[platform.system()]()
-    print(f"""{bolds.YELLOW}
-☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢
-☢ {bolds.PURPLE} ___      __                          {bolds.YELLOW}☢
-☢ {bolds.PURPLE}( ) \    / /                          {bolds.YELLOW}☢
-☢ {bolds.PURPLE}|/ \ \  / /__ _ __   ___  _ __ ___    {bolds.YELLOW}☢
-☢ {bolds.PURPLE}    \ \/ / _ \ '_ \ / _ \| '_ ` _ \   {bolds.YELLOW}☢
-☢ {bolds.PURPLE}     \  /  __/ | | | (_) | | | | | |_ {bolds.YELLOW}☢
-☢ {bolds.PURPLE}      \/ \___|_| |_|\___/|_| |_| |_( ){bolds.YELLOW}☢
-☢ {bolds.PURPLE}                                   |/ {bolds.YELLOW}☢
-☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bolds.RED}{bolds.UNDERLINE}Keep this open!\n{bolds.WHITE}All {bolds.GREEN}good {bolds.WHITE}on this side.\nPlease go to Discord now.")
-    print(f'{prefix}{bolds.GREEN}Online{bolds.END}\n{bolds.WHITE}[{bolds.YELLOW}☢{bolds.PURPLE} Venom{bolds.WHITE}] {bolds.WHITE}Logged in as {bolds.BLUE}{bot.user}{bolds.END}')
-
-@bot.event
-async def on_slash_command_error(i: disnake.ApplicationCommandInteraction, error):
-    if isinstance(error, NotOwner):
-        await i.send(embed=disnake.Embed(description=f">>> This bot should only be operated by it's owner, which is **{bot.owner}** or {bot.owner.mention}", color=disnake.Colour.red()).set_thumbnail(file=logo()))
-        return
-    raise error
 
 @bot.event
 async def on_modal_submit(i: disnake.ModalInteraction):
@@ -455,15 +394,55 @@ async def on_dropdown(i: disnake.MessageInteraction):
         if g is None:
             await i.response.send_message(embed=disnake.Embed(description=f">>> Could not find target server! :/\nHint: `Am I still in there?`", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             return
-        await i.response.edit_message(embeds=[disnake.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> ` ✅ ` **You selected {g.name}**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.owner.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), disnake.Embed(title=f"Success!", description=f">>> {g.name} will now be the only server you are supposed to use commands on. Happy nuking! 💥", color=disnake.Color.green()).set_thumbnail(file=logo())], view=None)
+        await i.response.edit_message(embeds=[disnake.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> ` ✅ ` **You selected {g.name}**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.user.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), disnake.Embed(title=f"Success!", description=f">>> {g.name} will now be the only server you are supposed to use commands on. Happy nuking! 💥", color=disnake.Color.green()).set_thumbnail(file=logo())], view=None)
         mod_config('home_server', g.id)
         del_pair('Not Setup Yet!')
+
+@bot.event
+async def on_ready():
+    if len(bot.guilds) == 0:
+        print(f"{bot.bolds.RED}Hey! Hey!{bot.bolds.END}{Fore.WHITE} Throw me at least in 1 server!")
+        quit()
+    if get_var('Not Setup Yet!'):
+        dm_conv = await bot.user.create_dm()
+        #await dm_conv.send(embed=discord.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.user.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
+
+    def win_clear():
+        run("cls", shell=True)
+
+    def lin_clear():
+        run(["clear"])
+
+    doPlatformRespectiveCMD = {
+        'Windows':win_clear,
+        'Linux':lin_clear,
+    }
+    doPlatformRespectiveCMD[platform.system()]()
+    print(f"""{bot.bolds.YELLOW}
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢
+☢ {bot.bolds.PURPLE} ___      __                          {bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}( ) \    / /                          {bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}|/ \ \  / /__ _ __   ___  _ __ ___    {bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}    \ \/ / _ \ '_ \ / _ \| '_ ` _ \   {bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}     \  /  __/ | | | (_) | | | | | |_ {bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}      \/ \___|_| |_|\___/|_| |_| |_( ){bot.bolds.YELLOW}☢
+☢ {bot.bolds.PURPLE}                                   |/ {bot.bolds.YELLOW}☢
+☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bot.bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bot.bolds.RED}{bot.bolds.UNDERLINE}Keep this open!\n{bot.bolds.WHITE}All {bot.bolds.GREEN}good {bot.bolds.WHITE}on this side.\nPlease go to Discord now.")
+    print(f'{bot.prefix}{bot.bolds.GREEN}Online{bot.bolds.END}\n{bot.bolds.WHITE}[{bot.bolds.YELLOW}☢{bot.bolds.PURPLE} Venom{bot.bolds.WHITE}] {bot.bolds.WHITE}Logged in as {bot.bolds.BLUE}{bot.user}{bot.bolds.END}')
+
+@bot.command()
+async def load(ctx: commands.Context, part):
+    if part == "events":
+        await bot.load_extension("Venom.cogs.events")
+        await ctx.send(content="> ✅ **[` Events loaded `](https://127.0.0.1)**")
+    if part not in ["events", "commands", "cmds"]:
+        await ctx.send(content="> ` ❌ Nee, die heb ik niet.`\n**Kies uit**\n```- events\n- commands```")
 
 try:
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
 except disnake.errors.LoginFailure:
-    sys.stdout.write(f"{prefix}{Fore.RED}Token invalid. {Fore.WHITE}Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bolds.BOLD}http://127.0.0.1:8080/configure\n{Fore.CYAN+BOLD}Press CTRL + C if you're done!\n{Fore.RESET}Waiting for user to perform the needed actions and CTRL + C...\n")
+    sys.stdout.write(f"{bot.prefix}{Fore.RED}Token invalid. {Fore.WHITE}Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bot.bolds.BOLD}http://127.0.0.1:8080/configure\n{Fore.CYAN+BOLD}Press CTRL + C if you're done!\n{Fore.RESET}Waiting for user to perform the needed actions and CTRL + C...\n")
     serve(app.wsgi_app)
-    sys.stdout.write(f"{prefix}{Fore.LIGHTGREEN_EX}Great! {Fore.WHITE}Now you should restart\n")
+    sys.stdout.write(f"{bot.prefix}{Fore.LIGHTGREEN_EX}Great! {Fore.WHITE}Now you should restart\n")
