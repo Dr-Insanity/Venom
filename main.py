@@ -71,8 +71,10 @@ class VenomBot(commands.Bot):
         END = '\033[0m'
     
     prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
+    stealth = True
+    mimic_messages = False
 
-bot = VenomBot(command_prefix=".", self_bot=True)
+bot = VenomBot(command_prefix="""\ """, self_bot=True)
 bot.owner_id = 492019506562990080
 bot.remove_command("help")
 
@@ -210,7 +212,7 @@ class Functs:
 @bot.command()
 async def flushed(ctx: commands.Context, *, spamtext: str):
     for a in range(0, 9):
-        await ctx.send(spamtext)
+        await ctx.message.reply(spamtext, mention_author=bot.stealth)
 
 @bot.command()
 async def delete_my_dms(ctx: commands.Context):
@@ -223,7 +225,7 @@ async def delete_my_dms(ctx: commands.Context):
                 await message.delete(delay=0)
 
     elif not isinstance(ctx.channel, discord.channel.DMChannel):
-        await ctx.send(silent=True, content=":no_entry: **Only in DMs, dipshit!** bruh")
+        await ctx.message.reply(silent=bot.stealth, content=":no_entry: **Only in DMs, dipshit!** bruh", mention_author=False)
 
 @bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
@@ -263,25 +265,25 @@ async def configure(i: disnake.Interaction, option: str):
         return
         results = mod_config('channel_del_audit', f"{msg.content}")
         if results == "set_key_in_default":
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+            await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
             return
     if option == "Change text that will appear on audit logs for member punishments (ban, kick, etc)":
-        m = await i.send(content=f"> ✅ **Changing text that will appear on their audit logs for member nuke actions (i.e. ban, kick)**\nWhat shall be the text? *(Please type now)*")
+        m = await i.message.reply(content=f"> ✅ **Changing text that will appear on their audit logs for member nuke actions (i.e. ban, kick)**\nWhat shall be the text? *(Please type now)*")
         try:
             msg: disnake.Message = await bot.wait_for('message', check=lambda m: m.author.id == i.author.id and m.channel.id == i.channel.id, timeout=60)
         except TimeoutError:
-            await i.send(embed=disnake.Embed(description=f"> ⏱️ Timed out. Retry.", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+            await i.message.reply(embed=disnake.Embed(description=f"> ⏱️ Timed out. Retry.", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             await m.edit(content=f"> ~~✅ **Changing text that will appear on their audit logs for member nuke actions**\nWhat shall be the text? *(TIMED OUT!)*~~")
             return
         results = mod_config('members_punish_audit', f"{msg.content}")
         if results == "set_key_in_default":
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+            await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {msg.content} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
             return
     if option == "Change target server":
-        m = await i.send(content=f"> ✅ **Specifying target server**", view=adddrop_ls_servers())
+        m = await i.message.reply(content=f"> ✅ **Specifying target server**", view=adddrop_ls_servers())
         return
     if option == "Change home server":
-        await i.send(embed=disnake.Embed(title=f"Please specify your home/own server", color=0xF6F908, timestamp=datetime.now()).set_thumbnail(file=logo()), view=make_home_guild_select_view())
+        await i.message.reply(embed=disnake.Embed(title=f"Please specify your home/own server", color=0xF6F908, timestamp=datetime.now()).set_thumbnail(file=logo()), view=make_home_guild_select_view())
         return
     if option == "Setup questions":
         await i.response.send_modal(
@@ -299,7 +301,7 @@ async def configure(i: disnake.Interaction, option: str):
 async def permissions_for(i: disnake.Interaction):
     guild_id = get_var('target_server')
     if guild_id is None:
-        await i.send(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     g = bot.get_guild(int(guild_id))
     global_perms = f""
@@ -312,7 +314,7 @@ async def permissions_for(i: disnake.Interaction):
             global_perms = f"Administrator 👑 (All permissions)"
             break
         global_perms += f"""{perms[str(value)]} | {permission}\n"""
-    await i.send(embed=disnake.Embed(title=f"Global permissions we have", description=f"```{global_perms}```", color=disnake.Colour.blurple()))
+    await i.message.reply(embed=disnake.Embed(title=f"Global permissions we have", description=f"```{global_perms}```", color=disnake.Colour.blurple()))
 
 @bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
@@ -320,14 +322,14 @@ async def start(i: disnake.Interaction):
     guild_id = get_var('target_server')
     homeserver = get_var('home_server')
     if guild_id is None:
-        await i.send(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(description=f"> Configure Nuke bot first with the ` /setup ` command", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     g = bot.get_guild(int(guild_id))
     if homeserver == guild_id:
-        await i.send(embed=disnake.Embed(description=f"> This is suicide! You specified your home server as your target server!\n\n**Change your target_server, please.**", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(description=f"> This is suicide! You specified your home server as your target server!\n\n**Change your target_server, please.**", color=disnake.Colour.red()).set_thumbnail(file=logo()))
         return
     if i.guild.id == guild_id:
-        await i.send(embed=disnake.Embed(description=f"> Are you insane? Do it in your own server remotely!\n\n**You wouldn't want to be in the nuclear fallout! :", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(description=f"> Are you insane? Do it in your own server remotely!\n\n**You wouldn't want to be in the nuclear fallout! :", color=disnake.Colour.red()).set_thumbnail(file=logo()))
 
     return
 
@@ -349,22 +351,22 @@ async def on_modal_submit(i: disnake.ModalInteraction):
     if i.data.custom_id == "setup_questions":
         try:
             int(value)
-            await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), view=mk_q(bot, str(value)))
+            await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {value} ` Is the amount of questions people will be asked", color=disnake.Colour.green()).set_thumbnail(file=logo()), view=mk_q(bot, str(value)))
             return
         except ValueError:
-            await i.send(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
+            await i.message.reply(embed=disnake.Embed(title=f"❌ Ah ain't gonna work, boss. :(", description=f"` {value} ` Is not a number (NaN)", color=disnake.Colour.red()).set_thumbnail(file=logo()))
             return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', list(value)[1][1]["components"])
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', list(value)[1][1])
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
     if i.data.custom_id == "modal_audit_rol_dels":
         mod_config('role_del_audit', list(value)[1][1])
-        await i.send(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
+        await i.message.reply(embed=disnake.Embed(title=f"✅ Gotcha", description=f"` {list(value)[1][1]} ` will appear on their audit logs", color=disnake.Colour.green()).set_thumbnail(file=logo()))
         return
 
 @bot.event
@@ -405,7 +407,7 @@ async def on_ready():
         quit()
     if get_var('Not Setup Yet!'):
         dm_conv = await bot.user.create_dm()
-        #await dm_conv.send(embed=discord.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.user.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
+        #await dm_conv.message.reply(embed=discord.Embed(title=f"💥 Welcome to Venom! ☢️ :D", description=f"To continue, please **specify the following**\n> **`Select your home server`**", color=0xF6F908, timestamp=datetime.now()).set_author(name=f"Hello, {bot.user.display_name}").set_footer(text=f"It should NOT be the server you are targeting!!! Preferably your own server").set_thumbnail(file=logo()), view=make_home_guild_select_view())
 
     def win_clear():
         run("cls", shell=True)
@@ -432,13 +434,16 @@ async def on_ready():
 
 @bot.command()
 async def load(ctx: commands.Context, part):
+    await ctx.message.delete()
     if part == "events":
         await bot.load_extension("Venom.cogs.events")
-        await ctx.send(content="> ✅ **[` Events loaded `](https://127.0.0.1)**")
+        await ctx.message.reply(content="> ✅ **[` Events loaded `](https://127.0.0.1)**", silent=bot.stealth, mention_author=False)
     if part not in ["events", "commands", "cmds"]:
-        await ctx.send(content="> ` ❌ Nee, die heb ik niet.`\n**Kies uit**\n```- events\n- commands```")
+        await ctx.message.reply(content="> ` ❌ Nee, die heb ik niet.`\n**Kies uit**\n```- events\n- commands```", silent=bot.stealth, mention_author=False)
 
 try:
+    asyncio.run(bot.load_extension("Venom.cogs.events"))
+    asyncio.run(bot.load_extension("Venom.cogs.commands"))
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
