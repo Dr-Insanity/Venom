@@ -4,6 +4,7 @@ from subprocess import run
 import platform
 from sys import argv, executable
 import sys
+from typing import TYPE_CHECKING
 import discord
 from Venom.weblogin import app
 from waitress import serve
@@ -46,6 +47,9 @@ from asyncio import TimeoutError
 from time import mktime
 from colorama import init, Fore
 from datetime import datetime
+import urllib.parse
+if TYPE_CHECKING:
+    import Venom
 
 init(autoreset=True)
 
@@ -54,6 +58,7 @@ def logo():
 
 load_dotenv(".env")
 token = getenv("token")
+
 
 class VenomBot(commands.Bot):
     
@@ -71,12 +76,52 @@ class VenomBot(commands.Bot):
         END = '\033[0m'
     
     prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
-    stealth = True
+    stealth = False
     mimic_messages = False
 
-bot = VenomBot(command_prefix="""\ """, self_bot=True)
+    async def say(self, context: commands.Context, content: str="", embed: "Venom.Embed"=None):
+        parsed_embed = ""
+        if embed is not None:
+            parsed_embed = str(embed)
+        if self.stealth:
+            if embed is None:
+                await context.send(content=content, mention_author=False)
+            elif embed is not None:
+                await context.send(f"{content}{parsed_embed}", mention_author=False)
+        elif not self.stealth:
+            if embed is None:
+                await context.reply(content=content, mention_author=False)
+            elif embed is not None:
+                await context.reply(f"{content}{parsed_embed}", mention_author=False)
+
+bot = VenomBot(command_prefix="/", self_bot=True)
 bot.owner_id = 492019506562990080
 bot.remove_command("help")
+class VenomHelp(commands.HelpCommand):
+   # /help
+    async def send_bot_help(self, mapping):
+        await self.context.send("This is help")
+
+   # /help <command>
+    async def send_command_help(self, command):
+        await self.context.send("This is help command")
+
+   # /help <group>
+    async def send_group_help(self, group):
+        await self.context.send("This is help group")
+
+   # /help <cog>
+    async def send_cog_help(self, cog):
+        await self.context.send("This is help cog")
+
+    async def command_not_found(self, string: str):
+        """
+        A method called when a command is not found in the help command. This is useful to override for i18n.
+        Defaults to No command called {0} found.
+        """
+        await self.context.send("Ik ken die command niet, vuile hoer")
+
+bot.help_command = VenomHelp()
 
 if token is None:
     sys.stdout.write(f"{bot.prefix}{Fore.WHITE}It looks like it's your first time. Please go in your web browser and go to locally-hosted configuration page {Fore.BLUE+bot.bolds.BOLD}http://127.0.0.1:8080/configure\n")
@@ -208,24 +253,6 @@ class Functs:
         
         print(roles_and_their_perms)
         return roles_and_their_perms
-
-@bot.command()
-async def flushed(ctx: commands.Context, *, spamtext: str):
-    for a in range(0, 9):
-        await ctx.message.reply(spamtext, mention_author=bot.stealth)
-
-@bot.command()
-async def delete_my_dms(ctx: commands.Context):
-    user = bot.get_user(bot.owner_id) # type: discord.User
-    print(user)
-    await ctx.message.delete()
-    if isinstance(ctx.channel, discord.channel.DMChannel):
-        async for message in ctx.channel.history():
-            if message.author.id == 530194792701886470:
-                await message.delete(delay=0)
-
-    elif not isinstance(ctx.channel, discord.channel.DMChannel):
-        await ctx.message.reply(silent=bot.stealth, content=":no_entry: **Only in DMs, dipshit!** bruh", mention_author=False)
 
 @bot.command(guild_ids=__home_serverid)
 @commands.is_owner()
@@ -443,7 +470,7 @@ async def load(ctx: commands.Context, part):
 
 try:
     asyncio.run(bot.load_extension("Venom.cogs.events"))
-    asyncio.run(bot.load_extension("Venom.cogs.commands"))
+    asyncio.run(bot.load_extension("Venom.cogs.venomands"))
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
