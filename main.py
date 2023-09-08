@@ -4,9 +4,9 @@ from subprocess import run
 import platform
 from sys import argv, executable
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Mapping, Optional
 import discord
-from Venom.weblogin import app
+from venom.weblogin import app
 from waitress import serve
 from jsontools import get_var, mod_config, del_pair
 
@@ -15,7 +15,7 @@ PURPLE = '\033[38;5;57m'
 
 try:
     def dep_installer():
-        from Venom.install_deps import Dependencies
+        from venom.install_deps import Dependencies
         Dependencies.install()
     known_opts = {"--install-dependencies":dep_installer}
     known_opts[argv[1]]()
@@ -35,7 +35,7 @@ except KeyError:
 
 
 if get_var('Not Setup Yet!'):
-    from Venom.install_deps import Dependencies
+    from venom.install_deps import Dependencies
     Dependencies.install()
 
 import disnake
@@ -48,8 +48,7 @@ from time import mktime
 from colorama import init, Fore
 from datetime import datetime
 import urllib.parse
-if TYPE_CHECKING:
-    import Venom
+import venom
 
 init(autoreset=True)
 
@@ -79,7 +78,7 @@ class VenomBot(commands.Bot):
     stealth = False
     mimic_messages = False
 
-    async def say(self, context: commands.Context, content: str="", embed: "Venom.Embed"=None):
+    async def say(self, context: commands.Context, content: str="", embed: venom.Embed=None):
         parsed_embed = ""
         if embed is not None:
             parsed_embed = str(embed)
@@ -94,13 +93,62 @@ class VenomBot(commands.Bot):
             elif embed is not None:
                 await context.reply(f"{content}{parsed_embed}", mention_author=False)
 
+discord.Embed
+
 bot = VenomBot(command_prefix="/", self_bot=True)
 bot.owner_id = 492019506562990080
 bot.remove_command("help")
 class VenomHelp(commands.HelpCommand):
-   # /help
-    async def send_bot_help(self, mapping):
-        await self.context.send("This is help")
+    from venom.cogs.venomands import Venomands
+
+    async def send_bot_help(self, mapping: Mapping[Optional[commands.Cog], list[commands.Command]]):
+        commands = "⚡ AVAILABLE COMMANDS\n=="
+        for _ in range(0, len(commands)):
+            commands += "="
+        commands += "\n"
+        for cog, command in mapping.items():
+            if cog is None or cog.qualified_name == "Events":
+                continue
+            for cmd in command:
+                commands += f"💠 {cmd}\n"
+        await bot.say(self.context, embed=venom.Embed(description=commands, color=venom.Color.blurple()))
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        await bot.user.edit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    # /help <command>
     async def send_command_help(self, command):
@@ -463,14 +511,14 @@ async def on_ready():
 async def load(ctx: commands.Context, part):
     await ctx.message.delete()
     if part == "events":
-        await bot.load_extension("Venom.cogs.events")
+        await bot.load_extension("venom.cogs.events")
         await ctx.message.reply(content="> ✅ **[` Events loaded `](https://127.0.0.1)**", silent=bot.stealth, mention_author=False)
     if part not in ["events", "commands", "cmds"]:
         await ctx.message.reply(content="> ` ❌ Nee, die heb ik niet.`\n**Kies uit**\n```- events\n- commands```", silent=bot.stealth, mention_author=False)
 
 try:
-    asyncio.run(bot.load_extension("Venom.cogs.events"))
-    asyncio.run(bot.load_extension("Venom.cogs.venomands"))
+    asyncio.run(bot.load_extension("venom.cogs.events"))
+    asyncio.run(bot.load_extension("venom.cogs.venomands"))
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)

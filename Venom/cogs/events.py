@@ -7,7 +7,7 @@ from jsontools import get_var, mod_config, del_pair
 import platform
 from discord.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
 from typing import TYPE_CHECKING
-import Venom
+import venom
 if TYPE_CHECKING:
     from main import VenomBot
 
@@ -29,10 +29,10 @@ class Events(commands.Cog):
         if self.bot.stealth:
             await ctx.message.delete()
         if isinstance(error, discord.ext.commands.errors.CommandNotFound):
-            await self.bot.say(context=ctx, embed=Venom.Embed(description="🔻 Die command bestaat niet, kneus", color=Venom.Color.red()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Die command bestaat niet, kneus", color=venom.Color.red()))
             return
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
-            await self.bot.say(context=ctx, embed=Venom.Embed(description="🔻 Ik mis een argument, botje! 🦴💀", color=Venom.Color.red()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Ik mis een argument, botje! 🦴💀", color=venom.Color.red()))
             return
         raise error
     
