@@ -48,7 +48,7 @@ class Embed:
         for k, v in self.__dict__.items():
             if not k.startswith("_"):
                 raw_embed[k] = v
-        print(raw_embed)
+
         embed = f"{self._hidephrase}https://discordembeds.vercel.app/embed?" + urllib.parse.urlencode(raw_embed)
         return embed
 

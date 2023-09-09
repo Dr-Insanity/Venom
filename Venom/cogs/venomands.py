@@ -17,13 +17,36 @@ class Venomands(commands.Cog):
     def __init__(self, bot: "VenomBot"):
         self.bot = bot
 
+
     @commands.command()
     async def spam(self, ctx: commands.Context, amount: int, *, spamtext: str):
+        perms = ctx.channel.permissions_for(ctx.guild.me)
+
         convert_bool_to = {False: "❌", True: "✅"}
-        for permission, state in ctx.channel.permissions_for(ctx.guild.me):
-            print(f"""{permission} --> {convert_bool_to[state]}""")
-        
-        await self.bot.say(context=ctx, embed=venom.Embed(description=f"Spam aborted, command in testing mode", color=venom.Color.green()))
+
+        def format_permission_row(name, state):
+            state_str = convert_bool_to[state]
+            return f"  {name:<26} {state_str}"
+
+        header = "  Name                       Value"
+        separator = "  ----                       -----"
+
+        formatted_table = f"{header}\n{separator}\n"
+        for name, state in perms:
+            formatted_table += format_permission_row(name.replace('_', ' ').title(), state) + "\n"
+
+
+        has_slowmode_delay = 0
+        if ctx.guild.me is not None:
+            has_slowmode_delay = ctx.channel.slowmode_delay
+
+        self.bot.log(venom.INFO, venom.Testing, f"\n{formatted_table}")
+
+        if not bool(has_slowmode_delay):
+            await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅ spamming {spamtext}", color=venom.Color.green()))
+        elif bool(has_slowmode_delay):
+            await self.bot.say(context=ctx, embed=venom.Embed(description=f"❌ spamming has no use here\n𝘛𝘩𝘦 𝘤𝘩𝘢𝘯𝘯𝘦𝘭 𝘪𝘴 𝘢𝘳𝘮𝘦𝘥 𝘸𝘪𝘵𝘩 ⏱️𝘴𝘭𝘰𝘸𝘮𝘰𝘥𝘦", color=venom.Color.green()))
+            return
         #await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅ Spamming {spamtext}", color=venom.Color.green()))
         #for a in range(0, int(amount)):
         #    await ctx.send(spamtext)
@@ -80,19 +103,19 @@ class Venomands(commands.Cog):
     async def stealthmode(self, ctx: commands.Context):
         if self.bot.stealth:
             self.bot.stealth = False
-            await ctx.send(embed=venom.Embed(description="❌ DISABLED [🛸]Stealth Mode", color=venom.Color.dark_embed()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description="❌ DISABLED [🛸]Stealth Mode", color=venom.Color.dark_embed()))
         else:
             self.bot.stealth = True
             await self.bot.say(context=ctx, embed=venom.Embed(description="✅ ENABLED [🛸]Stealth Mode", color=venom.Color.green()))
 
-    @commands.command()
+    @commands.command(description="[DEVELOPER] Reload parts of the bot")
     async def reload(self, ctx: commands.Context, cog: str=None):
         if cog is not None:
             resolved_cog = self.bot.get_cog(cog)
             if resolved_cog is None:
                 await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Cog niet gevonden, kneus", color=venom.Color.red()))
                 return
-            await self.bot.reload_extension(f"Venom.cogs.{resolved_cog.qualified_name.lower()}")
+            await self.bot.reload_extension(f"venom.cogs.{resolved_cog.qualified_name.lower()}")
             await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅{resolved_cog.qualified_name} RELOADED", color=venom.Color.green()))
 
     @commands.command()

@@ -4,13 +4,13 @@ from subprocess import run
 import platform
 from sys import argv, executable
 import sys
-from typing import TYPE_CHECKING, Mapping, Optional
+from typing import TYPE_CHECKING, Mapping, Optional, Union
 import discord
 from venom.weblogin import app
 from waitress import serve
 from jsontools import get_var, mod_config, del_pair
 
-BOLD = '\033[1m'
+BOLD   = '\033[1m'
 PURPLE = '\033[38;5;57m'
 
 try:
@@ -78,6 +78,9 @@ class VenomBot(commands.Bot):
     stealth = False
     mimic_messages = False
 
+    def log(self, severity: Union[venom.INFO, venom.TEST, venom.WARN, venom.FATAL], logtype: Union[venom.ExecutedCommmand, venom.EventOccured, venom.Testing], text: str):
+        print(f"""{Fore.LIGHTBLACK_EX}{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))}{severity}{logtype}{str(text)}""")
+
     async def say(self, context: commands.Context, content: str="", embed: venom.Embed=None):
         parsed_embed = ""
         if embed is not None:
@@ -92,8 +95,6 @@ class VenomBot(commands.Bot):
                 await context.reply(content=content, mention_author=False)
             elif embed is not None:
                 await context.reply(f"{content}{parsed_embed}", mention_author=False)
-
-discord.Embed
 
 bot = VenomBot(command_prefix="/", self_bot=True)
 bot.owner_id = 492019506562990080
@@ -112,47 +113,15 @@ class VenomHelp(commands.HelpCommand):
             for cmd in command:
                 commands += f"💠 {cmd}\n"
         await bot.say(self.context, embed=venom.Embed(description=commands, color=venom.Color.blurple()))
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        await bot.user.edit
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
    # /help <command>
-    async def send_command_help(self, command):
-        await self.context.send("This is help command")
+    async def send_command_help(self, command: commands.Command):
+        commands = f"⚡ {command.name}\n=="
+        for _ in range(0, len(commands)):
+            commands += "="
+        commands += f"\nDESCRIPTION: {command.description}\n\nUSAGE: {command.usage}"
+        commands += ""
+        await bot.say(self.context, embed=venom.Embed(description=commands, color=venom.Color.blurple()))
 
    # /help <group>
     async def send_group_help(self, group):

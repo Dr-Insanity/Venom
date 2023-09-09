@@ -6,10 +6,20 @@ from datetime import datetime
 from jsontools import get_var, mod_config, del_pair
 import platform
 from discord.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
-from typing import TYPE_CHECKING
 import venom
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import VenomBot
+
+INFO  = venom.INFO
+TEST  = venom.TEST
+WARN  = venom.WARN
+FATAL = venom.FATAL
+
+ExecutedCommand = venom.ExecutedCommmand
+EventOccured = venom.EventOccured
+DeletedMessage = venom.OccuredEventTypes.DeletedMessage
+CommanD = venom.OccuredEventTypes.Command
 
 init(autoreset=True)
 
@@ -23,16 +33,18 @@ class Events(commands.Cog):
     async def on_command(self, ctx: commands.Context):
         if self.bot.stealth:
             await ctx.message.delete()
+        self.bot.log(INFO(), EventOccured(CommanD(self.bot.stealth)), f"The '{ctx.prefix}{ctx.command}' is ran with success")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error):
         if self.bot.stealth:
             await ctx.message.delete()
         if isinstance(error, discord.ext.commands.errors.CommandNotFound):
-            await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Die command bestaat niet, kneus", color=venom.Color.red()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description=f"🔻 '{ctx.command}' does not exist", color=venom.Color.red()))
             return
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
-            await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Ik mis een argument, botje! 🦴💀", color=venom.Color.red()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description=f"🔻 Missing arguments.", color=venom.Color.red()))
+            ctx.send_help(ctx.command)
             return
         raise error
     
