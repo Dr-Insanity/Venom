@@ -76,7 +76,10 @@ class VenomBot(commands.Bot):
     
     prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
     stealth = False
+    log_deleted_messages = False
     mimic_messages = False
+    deleted_messages = [] # type: list[int]
+    flagged_accounts = {} # type: dict[int, dict[str, Union[int, str]]]
 
     def log(self, severity: Union[venom.INFO, venom.TEST, venom.WARN, venom.FATAL], logtype: Union[venom.ExecutedCommmand, venom.EventOccured, venom.Testing], text: str):
         print(f"""{Fore.LIGHTBLACK_EX}{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))}{severity}{logtype}{str(text)}""")
@@ -475,6 +478,11 @@ async def on_ready():
 ☢ {bot.bolds.PURPLE}                                   |/ {bot.bolds.YELLOW}☢
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bot.bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bot.bolds.RED}{bot.bolds.UNDERLINE}Keep this open!\n{bot.bolds.WHITE}All {bot.bolds.GREEN}good {bot.bolds.WHITE}on this side.\nPlease go to Discord now.")
     print(f'{bot.prefix}{bot.bolds.GREEN}Online{bot.bolds.END}\n{bot.bolds.WHITE}[{bot.bolds.YELLOW}☢{bot.bolds.PURPLE} Venom{bot.bolds.WHITE}] {bot.bolds.WHITE}Logged in as {bot.bolds.BLUE}{bot.user}{bot.bolds.END}')
+
+    while True:
+        await asyncio.sleep(10)
+        bot.deleted_messages.clear()
+
 
 @bot.command()
 async def load(ctx: commands.Context, part):

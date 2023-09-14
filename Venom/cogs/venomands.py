@@ -17,60 +17,68 @@ class Venomands(commands.Cog):
     def __init__(self, bot: "VenomBot"):
         self.bot = bot
 
-
-    @commands.command()
+    @commands.command(description="Send a message repeatedly with short intervals", usage="amount, spamtext")
     async def spam(self, ctx: commands.Context, amount: int, *, spamtext: str):
-        perms = ctx.channel.permissions_for(ctx.guild.me)
+        if ctx.guild is not None:
+            perms = ctx.channel.permissions_for(ctx.guild.me)
 
-        convert_bool_to = {False: "❌", True: "✅"}
+            convert_bool_to = {False: "❌", True: "✅"}
 
-        def format_permission_row(name, state):
-            state_str = convert_bool_to[state]
-            return f"  {name:<26} {state_str}"
+            def format_permission_row(name, state):
+                state_str = convert_bool_to[state]
+                return f"  {name:<26} {state_str}"
 
-        header = "  Name                       Value"
-        separator = "  ----                       -----"
+            header = "  Name                       Value"
+            separator = "  ----                       -----"
 
-        formatted_table = f"{header}\n{separator}\n"
-        for name, state in perms:
-            formatted_table += format_permission_row(name.replace('_', ' ').title(), state) + "\n"
-
+            formatted_table = f"{header}\n{separator}\n"
+            for name, state in perms:
+                formatted_table += format_permission_row(name.replace('_', ' ').title(), state) + "\n"
+            self.bot.log(venom.INFO, venom.Testing, f"\n{formatted_table}")
 
         has_slowmode_delay = 0
-        if ctx.guild.me is not None:
+        if ctx.guild is not None:
             has_slowmode_delay = ctx.channel.slowmode_delay
 
-        self.bot.log(venom.INFO, venom.Testing, f"\n{formatted_table}")
 
         if not bool(has_slowmode_delay):
             await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅ spamming {spamtext}", color=venom.Color.green()))
         elif bool(has_slowmode_delay):
             await self.bot.say(context=ctx, embed=venom.Embed(description=f"❌ spamming has no use here\n𝘛𝘩𝘦 𝘤𝘩𝘢𝘯𝘯𝘦𝘭 𝘪𝘴 𝘢𝘳𝘮𝘦𝘥 𝘸𝘪𝘵𝘩 ⏱️𝘴𝘭𝘰𝘸𝘮𝘰𝘥𝘦", color=venom.Color.green()))
             return
-        #await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅ Spamming {spamtext}", color=venom.Color.green()))
-        #for a in range(0, int(amount)):
-        #    await ctx.send(spamtext)
+        for _ in range(0, int(amount)):
+            await ctx.send(spamtext)
 
     @commands.command()
     async def delete(self, ctx: commands.Context):
-        user = self.bot.get_user(self.bot.owner_id) # type: discord.User
-        await ctx.message.delete()
         if isinstance(ctx.channel, discord.channel.DMChannel):
-            async for message in ctx.channel.history():
-                if message.author.id == 530194792701886470:
-                    await message.delete(delay=0)
+            async for m in ctx.channel.history():
+                if m.author.id == 530194792701886470:
+                    await m.delete(delay=0)
 
         elif not isinstance(ctx.channel, discord.channel.DMChannel):
             await self.bot.say(context=ctx, embed=venom.Embed(description=":no_entry: Only in DMs, dipshit! bruh", color=venom.Color.red()))
 
+
     @commands.command()
-    async def mimic_messages(self, ctx: commands.Context):
+    async def messagelogger(self, ctx: commands.Context):
+        if self.bot.log_deleted_messages:
+            self.bot.log_deleted_messages = False
+            await self.bot.say(context=ctx, embed=venom.Embed(description="❌ DISABLED [📨]Message Logger", color=venom.Color.dark_embed()))
+        else:
+            self.bot.log_deleted_messages = True
+            await self.bot.say(context=ctx, embed=venom.Embed(description="✅ ENABLED [📨]Message Logger", color=venom.Color.green()))
+
+
+
+    @commands.command()
+    async def mimicmessages(self, ctx: commands.Context):
         if self.bot.mimic_messages:
             self.bot.mimic_messages = False
-            await self.bot.say(context=ctx, embed=venom.Embed(description="❌ DISABLED [📨]Mimicking Messages"))
+            await self.bot.say(context=ctx, embed=venom.Embed(description="❌ DISABLED [📨]Mimicking Messages", color=venom.Color.dark_embed()))
         else:
             self.bot.mimic_messages = True
-            await self.bot.say(context=ctx, embed=venom.Embed(description="✅ ENABLED [https://gist.github.com/whitingx/3840905]Mimicking Messages", color=venom.Color.green()))
+            await self.bot.say(context=ctx, embed=venom.Embed(description="✅ ENABLED [📨]Mimicking Messages", color=venom.Color.green()))
 
     @commands.command()
     async def idle(self, ctx: commands.Context):
@@ -113,7 +121,7 @@ class Venomands(commands.Cog):
         if cog is not None:
             resolved_cog = self.bot.get_cog(cog)
             if resolved_cog is None:
-                await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Cog niet gevonden, kneus", color=venom.Color.red()))
+                await self.bot.say(context=ctx, embed=venom.Embed(description="🔻 Cog not found", color=venom.Color.red()))
                 return
             await self.bot.reload_extension(f"venom.cogs.{resolved_cog.qualified_name.lower()}")
             await self.bot.say(context=ctx, embed=venom.Embed(description=f"✅{resolved_cog.qualified_name} RELOADED", color=venom.Color.green()))

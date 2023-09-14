@@ -24,6 +24,10 @@ class OccuredEventTypes:
         def __str__(self):
             return f"{BOLD+PURPLE}MSG DELETE{Fore.RESET} "
 
+    class BulkDeletedMessages:
+        def __str__(self):
+            return f"{BOLD+PURPLE}BULK MSG DELETE{Fore.RESET} "
+
 
 class TerminalLogType:
     class ExecutedCommmand:
