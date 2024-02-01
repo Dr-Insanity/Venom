@@ -6,10 +6,12 @@ from datetime import datetime, timedelta
 from jsontools import get_var, mod_config, del_pair
 import platform
 from discord.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
-import venom
+import Venom
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import VenomBot
+
+venom = Venom
 
 INFO  = venom.INFO
 TEST  = venom.TEST

@@ -7,11 +7,13 @@ from jsontools import get_var, mod_config, del_pair
 import platform
 from discord.ext.commands import NotOwner,MemberNotFound,RoleNotFound,MessageNotFound,CommandInvokeError,MissingRequiredArgument,MissingPermissions,CommandOnCooldown,CommandNotFound,UserNotFound
 from typing import TYPE_CHECKING
-import venom
+import Venom
 if TYPE_CHECKING:
     from main import VenomBot
 
+
 init(autoreset=True)
+venom = Venom
 
 class Venomands(commands.Cog):
     def __init__(self, bot: "VenomBot"):

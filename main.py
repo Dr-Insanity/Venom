@@ -6,7 +6,7 @@ from sys import argv, executable
 import sys
 from typing import TYPE_CHECKING, Mapping, Optional, Union
 import discord
-from venom.weblogin import app
+from Venom.weblogin import app
 from waitress import serve
 from jsontools import get_var, mod_config, del_pair
 
@@ -15,7 +15,7 @@ PURPLE = '\033[38;5;57m'
 
 try:
     def dep_installer():
-        from venom.install_deps import Dependencies
+        from Venom.install_deps import Dependencies
         Dependencies.install()
     known_opts = {"--install-dependencies":dep_installer}
     known_opts[argv[1]]()
@@ -35,7 +35,7 @@ except KeyError:
 
 
 if get_var('Not Setup Yet!'):
-    from venom.install_deps import Dependencies
+    from Venom.install_deps import Dependencies
     Dependencies.install()
 
 import disnake
@@ -48,7 +48,7 @@ from time import mktime
 from colorama import init, Fore
 from datetime import datetime
 import urllib.parse
-import venom
+import Venom
 
 init(autoreset=True)
 
@@ -76,15 +76,12 @@ class VenomBot(commands.Bot):
     
     prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
     stealth = False
-    log_deleted_messages = False
     mimic_messages = False
-    deleted_messages = [] # type: list[int]
-    flagged_accounts = {} # type: dict[int, dict[str, Union[int, str]]]
 
-    def log(self, severity: Union[venom.INFO, venom.TEST, venom.WARN, venom.FATAL], logtype: Union[venom.ExecutedCommmand, venom.EventOccured, venom.Testing], text: str):
+    def log(self, severity: Union[Venom.INFO, Venom.TEST, Venom.WARN, Venom.FATAL], logtype: Union[Venom.ExecutedCommmand, Venom.EventOccured, Venom.Testing], text: str):
         print(f"""{Fore.LIGHTBLACK_EX}{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))}{severity}{logtype}{str(text)}""")
 
-    async def say(self, context: commands.Context, content: str="", embed: venom.Embed=None):
+    async def say(self, context: commands.Context, content: str="", embed: Venom.Embed=None):
         parsed_embed = ""
         if embed is not None:
             parsed_embed = str(embed)
@@ -103,7 +100,7 @@ bot = VenomBot(command_prefix="/", self_bot=True)
 bot.owner_id = 492019506562990080
 bot.remove_command("help")
 class VenomHelp(commands.HelpCommand):
-    from venom.cogs.venomands import Venomands
+    from Venom.cogs.venomands import Venomands
 
     async def send_bot_help(self, mapping: Mapping[Optional[commands.Cog], list[commands.Command]]):
         commands = "⚡ AVAILABLE COMMANDS\n=="
@@ -115,7 +112,7 @@ class VenomHelp(commands.HelpCommand):
                 continue
             for cmd in command:
                 commands += f"💠 {cmd}\n"
-        await bot.say(self.context, embed=venom.Embed(description=commands, color=venom.Color.blurple()))
+        await bot.say(self.context, embed=Venom.Embed(description=commands, color=Venom.Color.blurple()))
 
    # /help <command>
     async def send_command_help(self, command: commands.Command):
@@ -124,7 +121,7 @@ class VenomHelp(commands.HelpCommand):
             commands += "="
         commands += f"\nDESCRIPTION: {command.description}\n\nUSAGE: {command.usage}"
         commands += ""
-        await bot.say(self.context, embed=venom.Embed(description=commands, color=venom.Color.blurple()))
+        await bot.say(self.context, embed=Venom.Embed(description=commands, color=Venom.Color.blurple()))
 
    # /help <group>
     async def send_group_help(self, group):
@@ -479,23 +476,18 @@ async def on_ready():
 ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ ☢ """ + f"\n{bot.bolds.CYAN}By Karma / Dr-Insanity (On Github)" + f"\n{bot.bolds.RED}{bot.bolds.UNDERLINE}Keep this open!\n{bot.bolds.WHITE}All {bot.bolds.GREEN}good {bot.bolds.WHITE}on this side.\nPlease go to Discord now.")
     print(f'{bot.prefix}{bot.bolds.GREEN}Online{bot.bolds.END}\n{bot.bolds.WHITE}[{bot.bolds.YELLOW}☢{bot.bolds.PURPLE} Venom{bot.bolds.WHITE}] {bot.bolds.WHITE}Logged in as {bot.bolds.BLUE}{bot.user}{bot.bolds.END}')
 
-    while True:
-        await asyncio.sleep(10)
-        bot.deleted_messages.clear()
-
-
 @bot.command()
 async def load(ctx: commands.Context, part):
     await ctx.message.delete()
     if part == "events":
-        await bot.load_extension("venom.cogs.events")
+        await bot.load_extension("Venom.cogs.events")
         await ctx.message.reply(content="> ✅ **[` Events loaded `](https://127.0.0.1)**", silent=bot.stealth, mention_author=False)
     if part not in ["events", "commands", "cmds"]:
         await ctx.message.reply(content="> ` ❌ Nee, die heb ik niet.`\n**Kies uit**\n```- events\n- commands```", silent=bot.stealth, mention_author=False)
 
 try:
-    asyncio.run(bot.load_extension("venom.cogs.events"))
-    asyncio.run(bot.load_extension("venom.cogs.venomands"))
+    bot.load_extension("Venom.cogs.events")
+    bot.load_extension("Venom.cogs.venomands")
     bot.run(token)
 except KeyboardInterrupt:
     quit(0)
