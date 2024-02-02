@@ -133,5 +133,5 @@ class Venomands(commands.Cog):
         """"""
 
 
-async def setup(bot: "VenomBot"):
-    await bot.add_cog(Venomands(bot))
+def setup(bot: "VenomBot"):
+    bot.add_cog(Venomands(bot))

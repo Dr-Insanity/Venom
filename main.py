@@ -77,6 +77,8 @@ class VenomBot(commands.Bot):
     prefix = f"{bolds.WHITE}{bolds.BOLD}[{bolds.YELLOW}{bolds.BOLD}☢ {bolds.PURPLE}{bolds.BOLD}Venom{bolds.WHITE}{bolds.BOLD}] "
     stealth = False
     mimic_messages = False
+    log_deleted_messages = False
+    status = ""
 
     def log(self, severity: Union[Venom.INFO, Venom.TEST, Venom.WARN, Venom.FATAL], logtype: Union[Venom.ExecutedCommmand, Venom.EventOccured, Venom.Testing], text: str):
         print(f"""{Fore.LIGHTBLACK_EX}{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))}{severity}{logtype}{str(text)}""")

@@ -108,5 +108,5 @@ class Events(commands.Cog):
                                 "":"",
                             }
 
-async def setup(bot: "VenomBot"):
-    await bot.add_cog(Events(bot))
+def setup(bot: "VenomBot"):
+    bot.add_cog(Events(bot))
