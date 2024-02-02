@@ -1,6 +1,5 @@
 from typing import Union
 from colorama import init, Fore
-import colorama
 
 init(autoreset=True)
 
